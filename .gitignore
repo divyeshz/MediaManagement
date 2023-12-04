@@ -3,8 +3,11 @@
 /public/storage
 /storage/*.key
 /vendor
+.env
 .env.backup
+.env.production
 .phpunit.result.cache
+/.phpunit.cache
 docker-compose.override.yml
 Homestead.json
 Homestead.yaml
@@ -17,6 +20,9 @@ package-lock.log
 /public/css
 /public/js
 /public/mix-manifest.json
+/public/build
+auth.json
+/.fleet
 # But not these files...
 !/public/assets/*
 /public/assets/js
