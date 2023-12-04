@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\pages\HomePage;
 use App\Http\Controllers\pages\MiscError;
 use App\Http\Controllers\FacebookController;
+use App\Http\Controllers\UserController;
 
 
 // Facebook Routes Group
@@ -26,6 +27,18 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 Route::group(['middleware' => ['auth']], function () {
+
+  Route::controller(UserController::class)->group(function () {
+    Route::prefix('user')->group(function () {
+      Route::get('list', 'index')->name('user.list');
+      Route::get('create', 'create')->name('user.create');
+      Route::post('store', 'store')->name('user.store');
+      Route::get('edit/{id}', 'edit')->name('user.edit');
+      Route::post('update/{id}', 'update')->name('user.update');
+      Route::get('destroy/{id}', 'destroy')->name('user.destroy');
+      Route::post('status', 'status')->name('user.status');
+    });
+  });
 
   // Main Page Route
   Route::get('/home', [HomePage::class, 'index'])->name('home');

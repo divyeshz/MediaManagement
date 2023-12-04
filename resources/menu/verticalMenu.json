@@ -7,7 +7,7 @@
       "slug": "home"
     },
     {
-      "url": "/home",
+      "url": "/user/list",
       "name": "User",
       "icon": "menu-icon tf-icons bx bx-user-circle",
       "slug": "pages-user"

@@ -13,6 +13,9 @@ class User extends Authenticatable
 {
   use HasApiTokens, HasFactory, Notifiable;
 
+  protected $primaryKey = 'id';
+  public $incrementing = false;
+
   /**
    * The attributes that are mass assignable.
    *
@@ -21,6 +24,7 @@ class User extends Authenticatable
   protected $fillable = [
     'name',
     'email',
+    'phone',
     'profile',
     'gender',
     'social_id',
@@ -49,8 +53,6 @@ class User extends Authenticatable
     static::deleting(function ($module) {
       $userId = auth()->id() ?? null;
       $module->deleted_by = $userId;
-      $module->is_deleted = 1;
-      $module->save();
     });
   }
 

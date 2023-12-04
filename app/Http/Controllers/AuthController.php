@@ -11,7 +11,7 @@ class AuthController extends Controller
   public function index()
   {
     $pageConfigs = ['myLayout' => 'blank'];
-    return view('content.authentications.auth-login', ['pageConfigs' => $pageConfigs]);
+    return view('content.authentications.auth-login', compact('pageConfigs'));
   }
 
   /* User Logout */

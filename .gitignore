@@ -19,6 +19,7 @@ package-lock.log
 /.vscode
 /public/css
 /public/js
+/public/users
 /public/mix-manifest.json
 /public/build
 auth.json
