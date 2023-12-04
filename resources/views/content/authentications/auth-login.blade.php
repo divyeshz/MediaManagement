@@ -49,7 +49,7 @@
                         <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
                         <div class="d-flex justify-content-center">
-                            <a href="{{ route('') }}" class="btn btn-icon btn-label-facebook me-3">
+                            <a href="{{ route('auth.facebook') }}" class="btn btn-icon btn-label-facebook me-3">
                                 <i class="tf-icons bx bxl-facebook"></i>
                             </a>
                         </div>

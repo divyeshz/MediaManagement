@@ -1,27 +1,38 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\pages\HomePage;
 use App\Http\Controllers\pages\Page2;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\pages\HomePage;
 use App\Http\Controllers\pages\MiscError;
-use App\Http\Controllers\authentications\LoginBasic;
-use App\Http\Controllers\authentications\RegisterBasic;
 use App\Http\Controllers\FacebookController;
 
 
+// Facebook Routes Group
+Route::controller(FacebookController::class)->group(function () {
+  Route::get('auth/facebook', 'redirectToFacebook')->name('auth.facebook');
+  Route::get('auth/facebook/callback', 'handleFacebookCallback');
+});
 
-// Main Page Route
-// Route::get('/', [HomePage::class, 'index'])->name('pages-home');
+// Authentication Routes Group
+Route::controller(AuthController::class)->group(function () {
 
-Route::redirect('/', '/auth/login');
+  Route::get('/', 'index')->name('auth-login');
 
-// authentication
-Route::get('/auth/login', [LoginBasic::class, 'index'])->name('auth-login');
-Route::get('/page-2', [FacebookController::class, 'index'])->name('pages-page-2');
-// Route::get('/auth/register-basic', [RegisterBasic::class, 'index'])->name('auth-register-basic');
+  Route::group(['middleware' => 'auth'], function () {
+    Route::post('logout', 'logout')->name('logout');
+  });
 
+});
 
-Route::get('/page-2', [Page2::class, 'index'])->name('pages-page-2');
+Route::group(['middleware' => ['auth']], function () {
 
-// pages
-Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
+  // Main Page Route
+  Route::get('/home', [HomePage::class, 'index'])->name('home');
+
+  Route::get('/page-2', [FacebookController::class, 'index'])->name('pages-page-2');
+
+  Route::get('/page-2', [Page2::class, 'index'])->name('pages-page-2');
+
+  Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
+});
