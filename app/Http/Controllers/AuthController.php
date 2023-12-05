@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -10,12 +9,11 @@ class AuthController extends Controller
   /* Facebook login page */
   public function index()
   {
-    $pageConfigs = ['myLayout' => 'blank'];
-    return view('content.authentications.auth-login', compact('pageConfigs'));
+    return view('content.authentications.auth-login');
   }
 
   /* User Logout */
-  public function logout(Request $request)
+  public function logout()
   {
     Auth::logout();
     return redirect()->route('auth-login');

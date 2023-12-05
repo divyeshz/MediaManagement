@@ -72,7 +72,7 @@
 
                         <div class="mb-3">
                             <label class="form-label" for="bs-validation-email">Email</label>
-                            <input type="email" name='email' id="bs-validation-email" value="{{ $users->email }}"
+                            <input readonly type="email" name='email' id="bs-validation-email" value="{{ $users->email }}"
                                 class="form-control" placeholder="john.doe" aria-label="john.doe" required />
                             <div class="valid-feedback"> Looks good! </div>
                             <div class="invalid-feedback"> Please enter a valid email </div>
