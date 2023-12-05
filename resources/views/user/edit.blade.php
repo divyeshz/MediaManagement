@@ -86,8 +86,7 @@
 
                         <div class="mb-3">
                             <label class="form-label" for="bs-validation-upload-file">Profile pic</label>
-                            <input type="file" name='profile' class="form-control" id="bs-validation-upload-file"
-                                {{ $users->profile == '' ? 'required' : '' }} />
+                            <input type="file" name='profile' class="form-control" id="bs-validation-upload-file" />
                         </div>
 
                         @if (isset($users) && $users != null && $users->profile != '')
@@ -118,7 +117,7 @@
                         <div class="mb-3">
                             <div class="form-check">
                                 <input type="checkbox" name="is_active" value="1" class="form-check-input"
-                                    id="bs-validation-checkbox" required
+                                    id="bs-validation-checkbox"
                                     {{ $users->is_active == true ? 'checked' : '' }} />
                                 <label class="form-check-label" for="bs-validation-checkbox">Active</label>
                                 <div class="invalid-feedback"> You must agree before submitting. </div>

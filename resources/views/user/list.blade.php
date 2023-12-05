@@ -82,10 +82,12 @@
 
         </div>
     </div>
-
 @endsection
 
 @section('page-script')
+
+@include('components.flash')
+
     <script>
         $(document).on("click", ".switch_is_active", function() {
             const id = $(this).attr('data-id');
@@ -101,9 +103,9 @@
                 url: "{{ route('user.status') }}",
                 success: function(response) {
                     if (response.status == "200") {
-                        console.log(response.message);
+                        toastr.success('' + response.message + '');
                     } else {
-                        console.log(response.message);
+                        toastr.error('' + response.message + '');
                     }
                 }
             });
