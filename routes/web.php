@@ -17,19 +17,18 @@ Route::controller(FacebookController::class)->group(function () {
 
 // Authentication Routes Group
 Route::controller(AuthController::class)->group(function () {
-
   Route::get('/', 'index')->name('auth-login');
-
-  Route::group(['middleware' => 'auth'], function () {
-    Route::post('logout', 'logout')->name('logout');
-  });
-
 });
 
 Route::group(['middleware' => ['auth']], function () {
 
+  Route::controller(AuthController::class)->group(function () {
+    Route::post('logout', 'logout')->name('logout');
+  });
+
   Route::controller(UserController::class)->group(function () {
     Route::prefix('user')->group(function () {
+      Route::get('profile', 'profile')->name('profile');
       Route::get('list', 'index')->name('user.list');
       Route::get('create', 'create')->name('user.create');
       Route::post('store', 'store')->name('user.store');
