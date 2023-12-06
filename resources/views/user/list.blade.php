@@ -86,7 +86,7 @@
 
 @section('page-script')
 
-@include('components.flash')
+    @include('components.flash')
 
     <script>
         $(document).on("click", ".switch_is_active", function() {
@@ -133,34 +133,24 @@
             });
         });
 
-        $('#search').on('input', function() {
+        $(document).on('keyup', '#search', function() {
             var searchValue = $(this).val().trim();
             let perPage = $('#perPageSelect').val();
-            var invalidFeedback = $('.invalid-feedback');
-
-            if (searchValue.length < 3 && searchValue.length != 0) {
-                invalidFeedback.css('display', 'block'); // Display the invalid feedback
-            } else {
-                invalidFeedback.css('display', 'none'); // Hide the invalid feedback
-                // Make AJAX call if input length is more than 3 characters
-                if (searchValue.length > 3) {
-                    $.ajax({
-                        url: "{{ route('user.list') }}",
-                        type: "GET",
-                        data: {
-                            search: searchValue,
-                            per_page: perPage,
-                            is_ajax: true
-                        }, // Send the perPage value to the backend
-                        success: function(data) {
-                            $('#userList').html(data);
-                        },
-                        error: function(xhr, status, error) {
-                            console.error(error); // Log any errors for debugging
-                        }
-                    });
+            $.ajax({
+                url: "{{ route('user.list') }}",
+                type: "GET",
+                data: {
+                    search: searchValue,
+                    per_page: perPage,
+                    is_ajax: true
+                }, // Send the perPage value to the backend
+                success: function(data) {
+                    $('#userList').html(data);
+                },
+                error: function(xhr, status, error) {
+                    console.error(error); // Log any errors for debugging
                 }
-            }
+            });
         });
     </script>
 @endsection

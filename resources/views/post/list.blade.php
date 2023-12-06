@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <div class="row mb-5" id="postList" data-masonry='{"percentPosition": true }'>
+    <div class="row mb-5" id="postList" >
         @include('_partials.post_list')
         {{-- Pagination --}}
     </div>
