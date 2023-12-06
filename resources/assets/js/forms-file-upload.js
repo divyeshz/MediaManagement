@@ -34,8 +34,24 @@
       previewTemplate: previewTemplate,
       parallelUploads: 1,
       maxFilesize: 5,
+      acceptedFiles: '.jpeg,.jpg,.png',
       addRemoveLinks: true,
       maxFiles: 1
+    });
+    // Add the event handlers to the initialized Dropzone instance
+    myDropzone.on('addedfile', function (file) {
+      console.log('File added:', file);
+      // Your logic when a file is added
+    });
+
+    myDropzone.on('removedfile', function (file) {
+      console.log('File removed:', file);
+      // Your logic when a file is removed
+    });
+
+    myDropzone.on('sending', function (file, xhr, formData) {
+      console.log('Sending file:', file);
+      // Your logic before sending the file
     });
   }
 
