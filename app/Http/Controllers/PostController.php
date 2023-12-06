@@ -14,9 +14,34 @@ class PostController extends Controller
   /**
    * Display a listing of the resource.
    */
-  public function index()
+  public function index(Request $request)
   {
-    $posts = Post::get();
+    $query = Post::query();
+
+    // Apply search filters for 'name', 'email', and 'gender' columns
+    if ($request->has('search')) {
+      $searchValue = $request->search;
+
+      // Add search conditions for 'name', 'email', and 'gender' columns
+      $query->where(function ($query) use ($searchValue) {
+        $query->where('name', 'like', '%' . $searchValue . '%')
+          ->orWhere('text', 'like', '%' . $searchValue . '%');
+      });
+    }
+
+    $appendable = [];
+
+    // Create appendable array for non-empty query parameters except 'page' and '_token'
+    foreach ($request->except(['page', '_token', 'is_ajax']) as $key => $value) {
+      if (!empty($value)) {
+        $appendable[$key] = $value;
+      }
+    }
+
+    $posts = $query->orderBy('post_type', 'desc')->paginate(5)->appends($appendable);
+    if ($request->is_ajax == true) {
+      return view('_partials.post_list', compact('posts'));
+    }
     return view("post.list", compact("posts"));
   }
 

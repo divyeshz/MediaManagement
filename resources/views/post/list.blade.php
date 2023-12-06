@@ -19,89 +19,44 @@
                 <span class="text-muted fw-light">Home /</span> Post list
             </h4>
         </div>
-        <div class="col-md-6 text-md-end pt-3 mb-4">
-            <a href="{{ route('post.create') }}" class="btn btn-primary">
-                <span class="tf-icons bx bx-plus me-1"></span>Add
-            </a>
+
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <input type="text" name='search' class="form-control" id="search" placeholder="Search"
+                        value="{{ request()->search }}" />
+                </div>
+                <div class="col-md-9 text-md-end">
+                    <a href="{{ route('post.create') }}" class="btn btn-primary">
+                        <span class="tf-icons bx bx-plus me-1"></span>Add
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
-
-    <div class="row mb-5" data-masonry='{"percentPosition": true }'>
-        @foreach ($posts as $post)
-            @if ($post->post_type == 'image')
-                <div class="col-md-6 col-lg-4 mb-3">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $post->name }}</h5>
-                            <img class="img-fluid d-flex mx-auto my-4 rounded w-100"
-                                src="{{ asset('' . $post->image . '') }}" alt="Card image cap" />
-                            <div class="d-flex align-items-center justify-content-between mt-3">
-                                <div class="card-actions">
-                                    <form action="{{ route('post.destroy', $post->id) }}" class="delete-form"
-                                        method="POST">
-                                        @csrf
-                                        <a href="{{ route('post.edit', $post->id) }}" class=" me-3"><i
-                                                class="bx bx-edit me-1"></i></a>
-                                        <a href="javascript:;" class="delete"><i
-                                                class="bx bx-trash me-1 text-primary"></i></a>
-                                    </form>
-                                </div>
-                                <div class="dropup d-none d-sm-block">
-                                    <button class="btn p-0" type="button" id="sharedList" data-bs-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        <i class='text-primary bx bx-share-alt'></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="sharedList">
-                                        <a class="dropdown-item" href="javascript:void(0);">Last 28 Days</a>
-                                        <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
-                                        <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @elseif ($post->post_type == 'text')
-                <div class="col-md-6 col-lg-4 mb-3">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h3>{!! $post->text !!}</h3>
-                            <div class="d-flex align-items-center justify-content-between mt-3">
-                                <div class="card-actions">
-                                    <form action="{{ route('post.destroy', $post->id) }}" class="delete-form"
-                                        method="POST">
-                                        @csrf
-                                        <a href="{{ route('post.edit', $post->id) }}" class=" me-3"><i
-                                                class="bx bx-edit me-1"></i></a>
-                                        <a href="javascript:;" class="delete"><i
-                                                class="bx bx-trash me-1 text-primary"></i></a>
-                                    </form>
-                                </div>
-                                <div class="dropup d-none d-sm-block">
-                                    <button class="btn p-0" type="button" id="sharedList" data-bs-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        <i class='text-primary bx bx-share-alt'></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="sharedList">
-                                        <a class="dropdown-item" href="javascript:void(0);">Last 28 Days</a>
-                                        <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
-                                        <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
-        @endforeach
+    <div class="row mb-5" id="postList" data-masonry='{"percentPosition": true }'>
+        @include('_partials.post_list')
+        {{-- Pagination --}}
     </div>
+    @if ($posts->links() != '')
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-center">
+                    {!! $posts->links() !!}
+                </div>
+            </div>
+        </div>
+    @endif
 @endsection
 
 
 @section('page-script')
 
-@include('components.flash')
+    @include('components.flash')
     <script src="{{ asset('assets/js/cards-actions.js') }}"></script>
     <script>
         $(document).ready(function() {
@@ -140,6 +95,21 @@
                     }
                 });
             });
+
+
+            $(document).on('keyup', '#search', function() {
+                $.ajax({
+                    url: "{{ route('post.list') }}",
+                    method: 'GET',
+                    data: {
+                        search: $(this).val(),
+                        is_ajax: true
+                    },
+                    success: function(data) {
+                        $('#postList').html(data)
+                    }
+                })
+            })
         });
     </script>
 @endsection

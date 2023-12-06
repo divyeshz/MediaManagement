@@ -163,6 +163,7 @@
 
 @section('page-script')
     <script>
+        $(document).ready(function() {
             const fullToolbar = [
                 [{
                         font: []
