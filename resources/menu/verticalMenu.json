@@ -13,6 +13,12 @@
       "slug": "user-list"
     },
     {
+      "url": "/post/list",
+      "name": "Media",
+      "icon": "menu-icon tf-icons bx bx-photo-album",
+      "slug": "user-list"
+    },
+    {
       "url": "/page-2",
       "icon": "menu-icon tf-icons bx bx-file",
       "name": "Page 2",

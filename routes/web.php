@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\pages\HomePage;
 use App\Http\Controllers\pages\MiscError;
 use App\Http\Controllers\FacebookController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 
 
@@ -30,12 +31,22 @@ Route::group(['middleware' => ['auth']], function () {
     Route::prefix('user')->group(function () {
       Route::get('profile', 'profile')->name('profile');
       Route::get('list', 'index')->name('user.list');
-      Route::get('create', 'create')->name('user.create');
-      Route::post('store', 'store')->name('user.store');
       Route::get('edit/{id}', 'edit')->name('user.edit');
       Route::post('update/{id}', 'update')->name('user.update');
       Route::get('destroy/{id}', 'destroy')->name('user.destroy');
       Route::post('status', 'status')->name('user.status');
+    });
+  });
+
+  Route::controller(PostController::class)->group(function () {
+    Route::prefix('post')->group(function () {
+      Route::get('list', 'index')->name('post.list');
+      Route::get('create', 'create')->name('post.create');
+      Route::post('store', 'store')->name('post.store');
+      Route::get('edit/{id}', 'edit')->name('post.edit');
+      Route::post('update/{id}', 'update')->name('post.update');
+      Route::post('destroy/{id}', 'destroy')->name('post.destroy');
+      Route::post('status', 'status')->name('post.status');
     });
   });
 
