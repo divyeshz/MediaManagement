@@ -11,12 +11,20 @@ use Illuminate\Support\Facades\Storage;
 trait FileUpload
 {
 
+  /**
+   * The function creates a filename for a given file by appending the current date and time, the
+   * original filename without the extension, and the lowercase extension.
+   */
   public function createFilename($file)
   {
     $name = $file->getClientOriginalName();
     $filename = Carbon::now()->format('dmY_His') . '_' . trim(pathinfo($name, PATHINFO_FILENAME)) . '.' . Str::lower(pathinfo($name, PATHINFO_EXTENSION));
     return $filename;
   }
+
+  /**
+   * The function creates an image by moving the original file to a specified directory and returns the new filename.
+   */
   public function createImage($file, $filename, $id, $type)
   {
     // Move the original file to the post's directory
@@ -24,6 +32,9 @@ trait FileUpload
     return $filename;
   }
 
+  /**
+   * The function creates a thumbnail of an image and saves it in a specified directory.
+   */
   public function createThumbnail($file, $filename, $id, $type)
   {
     // Create thumbnail of image
@@ -41,6 +52,10 @@ trait FileUpload
     $thumbnail->save('users/' . $id . '/' . $type . '/' . $filename);
   }
 
+  /**
+   * The function checks if a file exists at a given URL and if so, deletes it along with its
+   * corresponding thumbnail.
+   */
   public function unlink($url, $thumbnailUrl)
   {
     // Delete file if exist
@@ -50,6 +65,9 @@ trait FileUpload
     }
   }
 
+  /**
+   * The function deletes a directory and its contents if it exists.
+   */
   public function deleteDirectory($url)
   {
     // Check file if exist
