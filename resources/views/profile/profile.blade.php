@@ -36,7 +36,7 @@
                 </div>
                 <div class="user-profile-header d-flex flex-column flex-sm-row text-sm-start text-center mb-4">
                     <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
-                        <img src="{{ asset('assets/img/avatars/1.png') }}" alt="user image"
+                        <img src="{{ asset(Auth::user()->profile) }}" alt="user image"
                             class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img">
                     </div>
                     <div class="flex-grow-1 mt-3 mt-sm-5">
@@ -76,7 +76,9 @@
                         <li class="d-flex align-items-center mb-3"><i class="bx bx-user"></i><span
                                 class="fw-medium mx-2">Full Name:</span> <span>{{ Auth::user()->name }}</span></li>
                         <li class="d-flex align-items-center mb-3"><i class="bx bx-check"></i><span
-                                class="fw-medium mx-2">Status:</span> <span>{{ Auth::user()->is_active == true ? "Active" : "Inactive" }} </span></li>
+                                class="fw-medium mx-2">Status:</span>
+                            <span>{{ Auth::user()->is_active == true ? 'Active' : 'Inactive' }} </span>
+                        </li>
                         <li class="d-flex align-items-center mb-3"><i class="bx bx-star"></i><span
                                 class="fw-medium mx-2">Role:</span> <span>Developer</span></li>
                         <li class="d-flex align-items-center mb-3"><i class="bx bx-flag"></i><span

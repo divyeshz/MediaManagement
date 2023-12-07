@@ -93,7 +93,7 @@
                             <div class="mb-3 image_box">
                                 <input type="hidden" name="hidden_profile" class="hidden_profile"
                                     value="{{ $users->profile }}">
-                                <img class="profile" src="{{ $users->profile }}" alt="image" />
+                                <img class="profile" src="{{ asset('' . str_replace('/profile/', '/profile/thumbnail/', Auth::user()->profile) . '') }}" alt="image" />
                                 <button type="button" class="btn btn-danger mt-3 remove">Remove</button>
                             </div>
                         @endif

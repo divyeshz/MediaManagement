@@ -41,7 +41,23 @@
     <tbody class="table-border-bottom-0">
         @foreach ($users as $user)
             <tr>
-                <td>{{ $user->name }}</td>
+                <td>
+                    <div class="d-flex justify-content-start align-items-center user-name">
+                        <div class="avatar-wrapper">
+                            <div class="avatar me-2">
+                                @if ($user->profile == null)
+                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&size=41&background=696cff&color=FFFFFF"
+                                        class="avatar-initial rounded-circle">
+                                @else
+                                    <img src="{{ asset('' . str_replace('/profile/', '/profile/thumbnail/', Auth::user()->profile) . '') }}"
+                                        alt="Avatar" class="rounded-circle">
+                                @endif
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column"><span class="emp_name text-truncate">{{ $user->name }}</span>
+                        </div>
+                    </div>
+                </td>
                 <td>{{ $user->email }}</td>
                 <td><span class="badge bg-label-primary me-1">{{ $user->gender }}</span></td>
                 <td>
