@@ -49,7 +49,7 @@
                                     <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&size=41&background=696cff&color=FFFFFF"
                                         class="avatar-initial rounded-circle">
                                 @else
-                                    <img src="{{ asset('' . str_replace('/profile/', '/profile/thumbnail/', Auth::user()->profile) . '') }}"
+                                    <img src="{{ asset('' . str_replace('/profile/', '/profile/thumbnail/', $user->profile) . '') }}"
                                         alt="Avatar" class="rounded-circle">
                                 @endif
                             </div>
