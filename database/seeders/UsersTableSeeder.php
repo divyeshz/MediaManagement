@@ -18,16 +18,13 @@ class UsersTableSeeder extends Seeder
     $users = [];
     $faker = Factory::create();
 
-    for ($i = 0; $i < 30; $i++) {
+    for ($i = 0; $i < 20; $i++) {
       $users[] = [
         'id' => Str::uuid(),
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'phone' => $faker->numerify('##########'),
-        'profile' => $faker->sentence,
         'gender' => $faker->randomElement(['male', 'female']),
-        'social_id' => $faker->unique()->numerify,
-        'social_type' => 'facebook',
         'is_active' => '1',
         'email_verified_at' => now(),
         'created_by' => Str::uuid(),
