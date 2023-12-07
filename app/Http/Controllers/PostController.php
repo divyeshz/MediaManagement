@@ -3,19 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\File;
-use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Auth;
+use App\Traits\FileUpload;
 
 class PostController extends Controller
 {
+  use FileUpload;
   /**
    * Display a listing of the resource.
    */
   public function index(Request $request)
   {
+    $users = User::where('id', '!=', Auth::user()->id)->get();
     $query = Post::query();
 
     // Apply search filters for 'name', 'email', and 'gender' columns
@@ -40,9 +41,9 @@ class PostController extends Controller
 
     $posts = $query->orderBy('post_type', 'desc')->paginate(5)->appends($appendable);
     if ($request->is_ajax == true) {
-      return view('_partials.post_list', compact('posts'));
+      return view('_partials.post_list', compact('posts', "users"));
     }
-    return view("post.list", compact("posts"));
+    return view("post.list", compact("posts", "users"));
   }
 
   /**
@@ -72,39 +73,20 @@ class PostController extends Controller
         'name'  => $request->name,
       ]);
 
-      $image = null;
       if ($request->hasfile('image')) {
 
         $file = $request->file('image');
+        $filename = $this->createFilename($file);
+        $this->createThumbnail($file, $filename, auth()->id(), 'post/thumbnail');
+        $image = $this->createImage($file, $filename, auth()->id(), 'post');
 
-        // Create thumbnail of image
-        $thumbnail = Image::make($file)->resize(200, 200, function ($constraint) {
-          $constraint->aspectRatio();
-        });
-
-        $name = $file->getClientOriginalName();
-        $filename = Carbon::now()->format('dmY_His') . '_' . trim(pathinfo($name, PATHINFO_FILENAME)) . '.' . Str::lower(pathinfo($name, PATHINFO_EXTENSION));
-
-        // Create the thumbnail directory if it doesn't exist
-        $thumbnailDirectory = 'users/' . auth()->id() . '/post/thumbnail/';
-
-        if (!file_exists($thumbnailDirectory)) {
-          mkdir($thumbnailDirectory, 0777, true);
-        }
-
-        // Move the original file to the post's directory
-        $image = $file->move('users/' . auth()->id() . '/post/', $filename);
-
-        // Save the thumbnail to the specified path
-        $thumbnail->save('users/' . auth()->id() . '/post/thumbnail/' . $filename);
+        // store the data
+        $post->update([
+          'post_type'     => $request->post_type,
+          'image'         => $image,
+          'is_active'     => $request->is_active ?? false,
+        ]);
       }
-
-      // store the data
-      $post->update([
-        'post_type'     => $request->post_type,
-        'image'         => $image,
-        'is_active'     => $request->is_active ?? false,
-      ]);
     }
 
     if ($request->get('post_type') == 'text') {
@@ -152,35 +134,13 @@ class PostController extends Controller
       $image = null;
       if ($request->hasfile('image')) {
         $file = $request->file('image');
-
-        // Create thumbnail of image
-        $thumbnail = Image::make($file)->resize(300, 185, function ($constraint) {
-          $constraint->aspectRatio();
-        });
-
-        $name = $file->getClientOriginalName();
-        $filename = Carbon::now()->format('dmY_His') . '_' . trim(pathinfo($name, PATHINFO_FILENAME)) . '.' . Str::lower(pathinfo($name, PATHINFO_EXTENSION));
-
-        // Create the thumbnail directory if it doesn't exist
-        $thumbnailDirectory = 'users/' . auth()->id() . '/post/thumbnail/';
-
-        if (!file_exists($thumbnailDirectory)) {
-          mkdir($thumbnailDirectory, 0777, true);
-        }
-        // Move the original file to the post's directory
-        $image = $file->move('users/' . auth()->id() . '/post/', $filename);
-
-        // Save the thumbnail to the specified path
-        $thumbnail->save('users/' . auth()->id() . '/post/thumbnail/' . $filename);
+        $filename = $this->createFilename($file);
+        $this->createThumbnail($file, $filename, auth()->id(), 'post/thumbnail');
+        $image = $this->createImage($file, $filename, auth()->id(), 'post');
 
         $url = $post->image;
         $thumbnailUrl = str_replace('/post/', '/post/thumbnail/', $url);
-
-        // Delete file if exist
-        if (File::exists($url) && $url != "") {
-          unlink($thumbnailUrl);
-          unlink($url);
-        }
+        $this->unlink($url, $thumbnailUrl);
       } else {
         $image = $request->hidden_image;
       }

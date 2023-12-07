@@ -17,32 +17,28 @@ trait FileUpload
     $filename = Carbon::now()->format('dmY_His') . '_' . trim(pathinfo($name, PATHINFO_FILENAME)) . '.' . Str::lower(pathinfo($name, PATHINFO_EXTENSION));
     return $filename;
   }
-  public function createImage($file, $type)
+  public function createImage($file, $filename, $id, $type)
   {
-    $filename = $this->createFilename($file);
     // Move the original file to the post's directory
-    $filename = $file->move('users/' . auth()->id() . '/' . $type . '/', $filename);
+    $filename = $file->move('users/' . $id . '/' . $type . '/', $filename);
     return $filename;
   }
 
-  public function createThumbnail($file, $type)
+  public function createThumbnail($file, $filename, $id, $type)
   {
-
-    $filename = $this->createFilename($file);
-
     // Create thumbnail of image
-    $thumbnail = Image::make($file)->resize(200, 200, function ($constraint) {
+    $thumbnail = Image::make($file)->resize(300, 185, function ($constraint) {
       $constraint->aspectRatio();
     });
 
-    $thumbnailDirectory = 'users/' . auth()->id() . '/' . $type;
+    $thumbnailDirectory = 'users/' . $id . '/' . $type;
 
     if (!file_exists($thumbnailDirectory)) {
       mkdir($thumbnailDirectory, 0777, true);
     }
 
     // You may also use the standard PHP method to save the image
-    $thumbnail->save('users/' . auth()->id() . '/' . $type . '/' . $filename);
+    $thumbnail->save('users/' . $id . '/' . $type . '/' . $filename);
   }
 
   public function unlink($url, $thumbnailUrl)

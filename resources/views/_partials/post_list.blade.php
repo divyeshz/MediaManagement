@@ -4,7 +4,8 @@
             <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title">{{ $post->name }}</h5>
-                    <img class="img-fluid d-flex mx-auto my-4 rounded w-100" src="{{ asset('' . $post->image . '') }}"
+                    <img class="img-fluid d-flex mx-auto my-4 rounded w-100"
+                        src="{{ asset('' . str_replace('/post/', '/post/thumbnail/', $post->image) . '') }}"
                         alt="Card image cap" />
                     <div class="d-flex align-items-center justify-content-between mt-3">
                         <div class="card-actions">
