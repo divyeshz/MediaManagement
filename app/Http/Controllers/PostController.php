@@ -171,8 +171,13 @@ class PostController extends Controller
    */
   public function destroy(string $id)
   {
-    $delete = Post::findOrFail($id);
-    $delete->forceDelete();
+    $post = Post::findOrFail($id);
+    $url = $post->image;
+    if ($url != '') {
+      $directory = dirname($url);
+      $this->deleteDirectory($directory);
+    }
+    $post->forceDelete();
     return redirect()->route('post.list')->with('success', 'Deleted SuccessFully!!!');
   }
 }
