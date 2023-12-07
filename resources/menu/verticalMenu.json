@@ -10,19 +10,19 @@
       "url": "/user/list",
       "name": "User",
       "icon": "menu-icon tf-icons bx bx-user-circle",
-      "slug": "user-list"
+      "slug": "user.list"
     },
     {
       "url": "/post/list",
-      "name": "Media",
+      "name": "Posts",
       "icon": "menu-icon tf-icons bx bx-photo-album",
-      "slug": "user-list"
+      "slug": "post.list"
     },
     {
-      "url": "/page-2",
-      "icon": "menu-icon tf-icons bx bx-file",
-      "name": "Page 2",
-      "slug": "pages-page-2"
+      "url": "/post/sharePostsList",
+      "name": "Shared Posts",
+      "icon": "menu-icon tf-icons bx bx-share-alt",
+      "slug": "post.sharePostsList"
     }
   ]
 }
