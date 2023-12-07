@@ -4,10 +4,12 @@
 
 @section('vendor-style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css') }}" />
 @endsection
 
 @section('vendor-script')
     <script src="{{ asset('assets/vendor/libs/masonry/masonry.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
 @endsection
 
@@ -38,7 +40,7 @@
         </div>
     </div>
 
-    <div class="row mb-5" id="postList" >
+    <div class="row mb-5" id="postList">
         @include('_partials.post_list')
         {{-- Pagination --}}
     </div>
@@ -109,7 +111,44 @@
                         $('#postList').html(data)
                     }
                 })
-            })
+            });
+
+            $(document).on('click', '.shareButton', function() {
+                const form = $(this).closest('.sharePostsForm');
+
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success',
+                        cancelButton: 'btn btn-danger me-2'
+                    },
+                    buttonsStyling: false,
+                })
+
+                swalWithBootstrapButtons.fire({
+                    title: 'Are you sure?',
+                    text: "You Want to share this post!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonClass: 'me-2',
+                    confirmButtonText: 'Yes, share it!',
+                    cancelButtonText: 'No, cancel!',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.value) {
+                        form.submit();
+                    } else if (
+                        // Read more about handling dismissals
+                        result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                        swalWithBootstrapButtons.fire(
+                            'Cancelled',
+                            'Your file is not shared safe :)',
+                            'error'
+                        )
+                    }
+                });
+            });
+
         });
     </script>
 @endsection

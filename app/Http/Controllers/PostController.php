@@ -16,7 +16,7 @@ class PostController extends Controller
    */
   public function index(Request $request)
   {
-    $users = User::where('id', '!=', Auth::user()->id)->get();
+    $users = User::where('id', '<>', Auth::user()->id)->get();
     $query = Post::query();
 
     // Apply search filters for 'name', 'email', and 'gender' columns
@@ -170,5 +170,29 @@ class PostController extends Controller
     }
     $post->forceDelete();
     return redirect()->route('post.list')->with('success', 'Deleted SuccessFully!!!');
+  }
+
+  /* function to share video */
+  public function sharePosts(Request $request)
+  {
+    $request->validate([
+      'postId'          => 'required|string|exists:posts,id',
+      'sharedUsersIds'  => 'required|array|exists:users,id',
+    ]);
+
+    $post = Post::findOrFail($request->postId);
+    if ($request->sharedUsersIds) {
+
+      // Delete Old users of requested video from the database
+      foreach ($post->users as $key => $userId) {
+        $post->users()->detach($post->users[$key]);
+      }
+
+      // Add New Users of requested video in the database
+      foreach ($request->sharedUsersIds as $key => $userId) {
+        $post->users()->attach($request->sharedUsersIds[$key]);
+      }
+    }
+    return redirect()->route('post.list')->with('success', 'Posts Shared successfully');
   }
 }

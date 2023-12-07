@@ -73,4 +73,10 @@ class User extends Authenticatable
   protected $casts = [
     'email_verified_at' => 'datetime',
   ];
+
+  // Define the relationship with posts through the shared_posts table
+  public function posts()
+  {
+      return $this->belongsToMany(Post::class, 'shared_posts', 'user_id', 'post_id');
+  }
 }

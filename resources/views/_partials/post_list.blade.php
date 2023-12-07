@@ -16,15 +16,39 @@
                                 <a href="javascript:;" class="delete"><i class="bx bx-trash me-1 text-primary"></i></a>
                             </form>
                         </div>
-                        <div class="dropup d-none d-sm-block">
-                            <button class="btn p-0" type="button" id="sharedList" data-bs-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
+                        <div class="dropdown d-none d-sm-block">
+                            <button class="btn p-0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                type="button" data-bs-auto-close="outside" id="sharedList">
                                 <i class='text-primary bx bx-share-alt'></i>
                             </button>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="sharedList">
-                                <a class="dropdown-item" href="javascript:void(0);">Last 28 Days</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
+                            <div class="dropdown-menu dropdown-menu-end w-px-300">
+                                <form action="{{ route('post.sharePosts') }}" method="post" class="p-4 sharePostsForm">
+                                    @csrf
+                                    <input type="hidden" name="postId" value="{{ $post->id }}">
+                                    <div class="mb-2">
+                                        <select id="selectpickerLiveSearch selectpickerSelectDeselect"
+                                            name="sharedUsersIds[]" class="selectpicker w-100" data-style="btn-default"
+                                            data-live-search="true" multiple data-actions-box="false" data-size="5">
+                                            @foreach ($users as $user)
+                                                @if ($user->profile == '')
+                                                    <option value="{{ $user->id }}"
+                                                        {{ $user->posts->contains($post->id) ? 'selected' : '' }}
+                                                        data-content="<img src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&size=30&background=696cff&color=FFFFFF' class='avatar-initial rounded-circle'>&nbsp;{{ $user->name }}">
+                                                        {{ $user->name }}</option>
+                                                @else
+                                                    <option value="{{ $user->id }}"
+                                                        {{ $user->posts->contains($post->id) ? 'selected' : '' }}
+                                                        data-content="<img src='{{ asset($user->profile) }}' class='rounded-circle' width='30' height='30'>&nbsp;{{ $user->name }}">
+                                                        {{ $user->name }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="d-grid gap-2 col-lg-6 mx-auto">
+                                        <button type="button"
+                                            class="btn rounded-pill btn-outline-primary shareButton">Share</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -45,15 +69,40 @@
                                 <a href="javascript:;" class="delete"><i class="bx bx-trash me-1 text-primary"></i></a>
                             </form>
                         </div>
-                        <div class="dropup d-none d-sm-block">
-                            <button class="btn p-0" type="button" id="sharedList" data-bs-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
+                        <div class="dropdown d-none d-sm-block">
+                            <button class="btn p-0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                type="button" data-bs-auto-close="outside" id="sharedList">
                                 <i class='text-primary bx bx-share-alt'></i>
                             </button>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="sharedList">
-                                <a class="dropdown-item" href="javascript:void(0);">Last 28 Days</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
+                            <div class="dropdown-menu dropdown-menu-end w-px-300">
+                                <form action="{{ route('post.sharePosts') }}" method="post"
+                                    class="p-4 sharePostsForm">
+                                    @csrf
+                                    <input type="hidden" name="postId" value="{{ $post->id }}">
+                                    <div class="mb-2">
+                                        <select id="selectpickerLiveSearch selectpickerSelectDeselect"
+                                            name="sharedUsersIds[]" class="selectpicker w-100" data-style="btn-default"
+                                            data-live-search="true" multiple data-actions-box="false" data-size="5">
+                                            @foreach ($users as $user)
+                                                @if ($user->profile == '')
+                                                    <option value="{{ $user->id }}"
+                                                        {{ $user->posts->contains($post->id) ? 'selected' : '' }}
+                                                        data-content="<img src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&size=30&background=696cff&color=FFFFFF' class='avatar-initial rounded-circle'>&nbsp;{{ $user->name }}">
+                                                        {{ $user->name }}</option>
+                                                @else
+                                                    <option value="{{ $user->id }}"
+                                                        {{ $user->posts->contains($post->id) ? 'selected' : '' }}
+                                                        data-content="<img src='{{ asset($user->profile) }}' class='rounded-circle' width='30' height='30'>&nbsp;{{ $user->name }}">
+                                                        {{ $user->name }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="d-grid gap-2 col-lg-6 mx-auto">
+                                        <button type="button"
+                                            class="btn rounded-pill btn-outline-primary shareButton">Share</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>

@@ -47,6 +47,7 @@ Route::group(['middleware' => ['auth']], function () {
       Route::post('update/{id}', 'update')->name('post.update');
       Route::post('destroy/{id}', 'destroy')->name('post.destroy');
       Route::post('status', 'status')->name('post.status');
+      Route::post('sharePosts', 'sharePosts')->name('post.sharePosts');
     });
   });
 
