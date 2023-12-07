@@ -49,4 +49,13 @@ trait FileUpload
       unlink($url);
     }
   }
+
+  public function deleteDirectory($url)
+  {
+    // Check file if exist
+    if (File::exists($url) && $url != "") {
+      // Delete the folder and its contents
+      File::deleteDirectory($url);
+    }
+  }
 }

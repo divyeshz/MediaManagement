@@ -9,11 +9,12 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 use App\Traits\AjaxResponse;
+use App\Traits\FileUpload;
 
 class UserController extends Controller
 {
 
-  use AjaxResponse;
+  use AjaxResponse, FileUpload;
   /**
    * Display a listing of the resource.
    */
@@ -101,47 +102,19 @@ class UserController extends Controller
     $profile = "";
     if ($request->hasfile('profile')) {
 
-      $url = $user->profile;
-      $filePath = public_path(parse_url($url, PHP_URL_PATH));
-      $thumbnailFile = basename(public_path(parse_url($url, PHP_URL_PATH)));
-
-      // Delete file if exist
-      if (File::exists($filePath) && $url != "") {
-        unlink('users/' . $user->id . '/profile/thumbnail/' . $thumbnailFile);
-        unlink($filePath);
-      }
-
       $file = $request->file('profile');
+      $filename = $this->createFilename($file);
+      $this->createThumbnail($file, $filename, $user->id, 'profile/thumbnail');
+      $profile = $this->createImage($file, $filename, $user->id, 'profile');
 
-      // Create thumbnail of image
-      $thumbnail = Image::make($file)->resize(200, 200, function ($constraint) {
-        $constraint->aspectRatio();
-      });
-
-      $name = $file->getClientOriginalName();
-      $filename = Carbon::now()->format('dmY_His') . '_' . trim(pathinfo($name, PATHINFO_FILENAME)) . '.' . Str::lower(pathinfo($name, PATHINFO_EXTENSION));
-
-      // Move the original file to the user's directory
-      $profile .= asset($file->move('users/' . $user->id . '/profile/', $filename));
-
-      // Create the thumbnail directory if it doesn't exist
-      $thumbnailDirectory = 'users/' . $user->id . '/profile/thumbnail/';
-
-      if (!file_exists($thumbnailDirectory)) {
-        mkdir($thumbnailDirectory, 0777, true);
-      }
-      // Save the thumbnail to the specified path
-      $thumbnail->save('users/' . $user->id . '/profile/thumbnail/' . $filename);
-    } elseif ($user->profile != "" && $request->hidden_profile == "") {
       $url = $user->profile;
-      $filePath = public_path(parse_url($url, PHP_URL_PATH));
-      $thumbnailFile = basename(public_path(parse_url($url, PHP_URL_PATH)));
+      $thumbnailUrl = str_replace('/profile/', '/profile/thumbnail/', $url);
+      $this->unlink($url, $thumbnailUrl);
+    } elseif ($user->profile != "" && $request->hidden_profile == "") {
 
-      // Delete file if exist
-      if (File::exists($filePath)) {
-        unlink('users/' . $user->id . '/profile/thumbnail/' . $thumbnailFile);
-        unlink($filePath);
-      }
+      $url = $user->profile;
+      $thumbnailUrl = str_replace('/profile/', '/profile/thumbnail/', $url);
+      $this->unlink($url, $thumbnailUrl);
     } else {
       $profile .= $request->hidden_profile;
     }
@@ -164,8 +137,13 @@ class UserController extends Controller
    */
   public function destroy(string $id)
   {
-    $delete = User::findOrFail($id);
-    $delete->forceDelete();
+    $user = User::findOrFail($id);
+    $url = $user->profile;
+    if ($url != '') {
+      $directory = dirname($url);
+      $this->deleteDirectory($directory);
+    }
+    $user->forceDelete();
     return redirect()->route('user.list')->with('success', 'Deleted SuccessFully!!!');
   }
 
