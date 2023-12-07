@@ -48,15 +48,10 @@ Route::group(['middleware' => ['auth']], function () {
       Route::post('destroy/{id}', 'destroy')->name('post.destroy');
       Route::post('status', 'status')->name('post.status');
       Route::post('sharePosts', 'sharePosts')->name('post.sharePosts');
+      Route::get('sharePostsList', 'sharePostsList')->name('post.sharePostsList');
     });
   });
 
   // Main Page Route
   Route::get('/home', [HomePage::class, 'index'])->name('home');
-
-  Route::get('/page-2', [FacebookController::class, 'index'])->name('pages-page-2');
-
-  Route::get('/page-2', [Page2::class, 'index'])->name('pages-page-2');
-
-  Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
 });

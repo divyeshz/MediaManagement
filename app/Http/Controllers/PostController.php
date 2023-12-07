@@ -195,4 +195,11 @@ class PostController extends Controller
     }
     return redirect()->route('post.list')->with('success', 'Posts Shared successfully');
   }
+
+  /* Render shared Posts */
+  public function sharePostsList()
+  {
+    $sharedPosts = auth()->user()->posts()->get();
+    return view('post.sharedPosts', compact('sharedPosts'));
+  }
 }
