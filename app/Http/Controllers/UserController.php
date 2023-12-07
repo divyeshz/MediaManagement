@@ -102,16 +102,20 @@ class UserController extends Controller
     $profile = "";
     if ($request->hasfile('profile')) {
 
+      // Remove Old Image
+      $url = $user->profile;
+      $thumbnailUrl = str_replace('/profile/', '/profile/thumbnail/', $url);
+      $this->unlink($url, $thumbnailUrl);
+
+      // Add New Image
       $file = $request->file('profile');
       $filename = $this->createFilename($file);
       $this->createThumbnail($file, $filename, $user->id, 'profile/thumbnail');
       $profile = $this->createImage($file, $filename, $user->id, 'profile');
 
-      $url = $user->profile;
-      $thumbnailUrl = str_replace('/profile/', '/profile/thumbnail/', $url);
-      $this->unlink($url, $thumbnailUrl);
     } elseif ($user->profile != "" && $request->hidden_profile == "") {
 
+      // Remove Old Image
       $url = $user->profile;
       $thumbnailUrl = str_replace('/profile/', '/profile/thumbnail/', $url);
       $this->unlink($url, $thumbnailUrl);
@@ -139,7 +143,7 @@ class UserController extends Controller
   {
     $user = User::findOrFail($id);
     $url = $user->profile;
-    if ($url != '') {
+    if ($url) {
       $directory = dirname($url);
       $this->deleteDirectory($directory);
     }

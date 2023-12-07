@@ -67,40 +67,28 @@ class PostController extends Controller
       'text'            => 'required_if:post_type,text|string',
       'is_active'       => 'nullable|boolean',
     ]);
-    if ($request->get('post_type') == 'image') {
 
-      $post = Post::create([
-        'name'  => $request->name,
-      ]);
+    $post = Post::create([
+      'name'          => $request->name,
+      'post_type'     => $request->post_type,
+      'text'          => $request->text,
+      'is_active'     => $request->is_active ?? false,
+    ]);
 
-      if ($request->hasfile('image')) {
+    if ($request->hasfile('image')) {
+      $file     = $request->file('image');
+      $filename = $this->createFilename($file);
+      $this->createThumbnail($file, $filename, auth()->id(), 'post/thumbnail');
+      $image    = $this->createImage($file, $filename, auth()->id(), 'post');
 
-        $file = $request->file('image');
-        $filename = $this->createFilename($file);
-        $this->createThumbnail($file, $filename, auth()->id(), 'post/thumbnail');
-        $image = $this->createImage($file, $filename, auth()->id(), 'post');
 
-        // store the data
-        $post->update([
-          'post_type'     => $request->post_type,
-          'image'         => $image,
-          'is_active'     => $request->is_active ?? false,
-        ]);
-      }
+      // store the data
+      $post->update(['image' => $image]);
+
+      return redirect()->route('post.list')->with('success', 'Insert SuccessFully!!!');
     }
 
-    if ($request->get('post_type') == 'text') {
-
-      $post = Post::create([
-        'post_type'     => $request->post_type,
-        'text'          => $request->text,
-        'is_active'     => $request->is_active ?? false,
-      ]);
-
-      return response()->json(['success' => true, 'message' => 'Insert Successfully']);
-    }
-
-    return redirect()->route('post.list')->with('success', 'Insert SuccessFully!!!');
+    return response()->json(['success' => true, 'message' => 'Insert Successfully']);
   }
 
   /**
@@ -133,14 +121,17 @@ class PostController extends Controller
 
       $image = null;
       if ($request->hasfile('image')) {
+
+        // Remove Old Image
+        $url = $post->image;
+        $thumbnailUrl = str_replace('/post/', '/post/thumbnail/', $url);
+        $this->unlink($url, $thumbnailUrl);
+
+        // Add New Image
         $file = $request->file('image');
         $filename = $this->createFilename($file);
         $this->createThumbnail($file, $filename, auth()->id(), 'post/thumbnail');
         $image = $this->createImage($file, $filename, auth()->id(), 'post');
-
-        $url = $post->image;
-        $thumbnailUrl = str_replace('/post/', '/post/thumbnail/', $url);
-        $this->unlink($url, $thumbnailUrl);
       } else {
         $image = $request->hidden_image;
       }
@@ -173,7 +164,7 @@ class PostController extends Controller
   {
     $post = Post::findOrFail($id);
     $url = $post->image;
-    if ($url != '') {
+    if ($url) {
       $directory = dirname($url);
       $this->deleteDirectory($directory);
     }
