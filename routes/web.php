@@ -18,7 +18,7 @@ Route::controller(FacebookController::class)->group(function () {
 
 // Authentication Routes Group
 Route::controller(AuthController::class)->group(function () {
-  Route::get('/', 'index')->name('auth-login');
+  Route::get('/', 'index')->name('auth-login')->middleware('guest');;
 });
 
 Route::group(['middleware' => ['auth']], function () {
