@@ -127,7 +127,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary">Submit</button>
-                                <a href="{{ route('user.list') }}" class="btn btn-label-secondary">Cancel</a>
+                                <a href="{{ url()->previous() }}" class="btn btn-label-secondary">Cancel</a>
                             </div>
                         </div>
                     </form>

@@ -79,8 +79,8 @@
 
     <div class="row mb-5" id="sharedPostList">
         @include('_partials.shared_post_list')
-        {{-- Pagination --}}
     </div>
+
 @endsection
 
 
