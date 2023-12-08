@@ -18,7 +18,7 @@
     <div class="row">
         <div class="col-md-6">
             <h4 class="py-3 mb-4">
-                <span class="text-muted fw-light">Home /</span> Post list
+                <span class="text-muted fw-light">Home /</span> Shared Post list
             </h4>
         </div>
 
