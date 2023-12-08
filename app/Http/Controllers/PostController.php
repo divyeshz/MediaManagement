@@ -199,7 +199,7 @@ class PostController extends Controller
   /* Render shared Posts */
   public function sharePostsList(Request $request)
   {
-
+    $users = User::where('id', '<>', Auth::user()->id)->get();
     $appendable = [];
 
     // Create appendable array for non-empty query parameters except 'page' and '_token'
@@ -214,12 +214,17 @@ class PostController extends Controller
       if ($request->search != null) {
         $query->where('name', 'Like', '%' . $request->search . '%')->orWhere('text', 'Like', '%' . $request->search . '%');
       }
+      if ($request->has("status") && $request->filled('status')) {
+        $query->where('posts.is_active', $request->status);
+      }
+      if ($request->has("sharedUserIds") && $request->filled('sharedUserIds')) {
+        $query->whereIn('created_by', $request->sharedUserIds);
+      }
     })->paginate(10)->appends($appendable);
 
-
     if ($request->is_ajax == true) {
-      return view('_partials.shared_post_list', compact('sharedPosts'));
+      return view('_partials.shared_post_list', compact('sharedPosts', 'users'));
     }
-    return view("post.sharedPosts", compact("sharedPosts"));
+    return view("post.sharedPosts", compact("sharedPosts", 'users'));
   }
 }

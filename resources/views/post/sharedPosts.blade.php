@@ -27,11 +27,39 @@
     <div class="card mb-4">
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-md-3">
+                <div class="col-md-2">
+                    <select id="selectpickerLiveSearch selectpickerSelectDeselect " name="sharedUsersIds[]"
+                        class="selectpicker w-100 selectUserSearch" data-style="btn-default" data-live-search="false" multiple
+                        data-actions-box="false" data-size="5" placeholder="Selcte User">
+                        @foreach ($users as $user)
+                            @if ($user->profile == '')
+                                <option value="{{ $user->id }}"
+                                    data-content="<img src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&size=30&background=696cff&color=FFFFFF' class='avatar-initial rounded-circle'>&nbsp;{{ $user->name }}">
+                                    {{ $user->name }}</option>
+                            @else
+                                <option value="{{ $user->id }}"
+                                    data-content="<img src='{{ asset($user->profile) }}' class='rounded-circle' width='30' height='30'>&nbsp;{{ $user->name }}">
+                                    {{ $user->name }}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="status" id="selectpickerBasic" placeholder="Select Status" class="selectpicker w-100"
+                        data-style="btn-default">
+                        <option value="" selected>Select Status</option>
+                        <option {{ request()->input('status') == '1' ? 'selected' : '' }} value="1">Active</option>
+                        <option {{ request()->input('status') == '0' ? 'selected' : '' }} value="0">Inactive</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
                     <input type="text" name='search' class="form-control" id="search" placeholder="Search"
                         value="{{ request()->search }}" />
                 </div>
-                <div class="col-md-9 text-md-end">
+                <div class="col-md-2">
+                    <a href="{{ route('post.sharePostsList') }}" type="reset" class="btn btn-label-secondary">Cancel</a>
+                </div>
+                <div class="col-md-4 text-md-end">
                     <a href="{{ route('post.create') }}" class="btn btn-primary">
                         <span class="tf-icons bx bx-plus me-1"></span>Add
                     </a>
@@ -65,6 +93,40 @@
                         $('#sharedPostList').html(data)
                     }
                 })
+            });
+
+            $(document).on('change', '#selectpickerBasic', function() {
+                $.ajax({
+                    url: "{{ route('post.sharePostsList') }}",
+                    method: 'GET',
+                    data: {
+                        status: $(this).val(),
+                        is_ajax: true
+                    },
+                    success: function(data) {
+                        $('#sharedPostList').html(data)
+                    }
+                })
+            });
+            $(document).on('change', '.selectUserSearch', function() {
+                var sharedUserIds = [];
+
+                // Iterate through each select box
+                $(this).find('option:selected').each(function() {
+                    sharedUserIds.push($(this).val());
+                });
+
+                $.ajax({
+                    url: "{{ route('post.sharePostsList') }}",
+                    method: 'GET',
+                    data: {
+                        sharedUserIds: sharedUserIds,
+                        is_ajax: true
+                    },
+                    success: function(data) {
+                        $('#sharedPostList').html(data)
+                    }
+                });
             });
         });
     </script>
