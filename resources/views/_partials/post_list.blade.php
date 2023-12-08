@@ -17,39 +17,46 @@
                             </form>
                         </div>
                         <div class="dropdown d-none d-sm-block">
-                            <button class="btn p-0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                type="button" data-bs-auto-close="outside" id="sharedList">
-                                <i class='text-primary bx bx-share-alt'></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end w-px-300">
-                                <form action="{{ route('post.sharePosts') }}" method="post" class="p-4 sharePostsForm">
-                                    @csrf
-                                    <input type="hidden" name="postId" value="{{ $post->id }}">
-                                    <div class="mb-2">
-                                        <select id="selectpickerLiveSearch selectpickerSelectDeselect"
-                                            name="sharedUsersIds[]" class="selectpicker w-100" data-style="btn-default"
-                                            data-live-search="true" multiple data-actions-box="false" data-size="5">
-                                            @foreach ($users as $user)
-                                                @if ($user->profile == '')
-                                                    <option value="{{ $user->id }}"
-                                                        {{ $user->posts->contains($post->id) ? 'selected' : '' }}
-                                                        data-content="<img src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&size=30&background=696cff&color=FFFFFF' class='avatar-initial rounded-circle'>&nbsp;{{ $user->name }}">
-                                                        {{ $user->name }}</option>
-                                                @else
-                                                    <option value="{{ $user->id }}"
-                                                        {{ $user->posts->contains($post->id) ? 'selected' : '' }}
-                                                        data-content="<img src='{{ asset($user->profile) }}' class='rounded-circle' width='30' height='30'>&nbsp;{{ $user->name }}">
-                                                        {{ $user->name }}</option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="d-grid gap-2 col-lg-6 mx-auto">
-                                        <button type="button"
-                                            class="btn rounded-pill btn-outline-primary shareButton">Share</button>
-                                    </div>
-                                </form>
-                            </div>
+                            <form action="{{ route('post.sharePosts') }}" method="post" class=" sharePostsForm">
+                                @csrf
+                                <input type="hidden" name="postId" value="{{ $post->id }}">
+                                <div class="mb-2">
+                                    <select id="selectpickerLiveSearch selectpickerSelectDeselect"
+                                        name="sharedUsersIds[]" class="selectpicker w-150 sharedUsersIds"
+                                        data-style="btn-default" data-live-search="true" multiple
+                                        data-actions-box="false" data-size="5">
+                                        @foreach ($users as $user)
+                                            @if ($user->profile == '')
+                                                <option value="{{ $user->id }}"
+                                                    {{ $user->posts->contains($post->id) ? 'selected' : '' }}
+                                                    data-content="<img src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&size=30&background=696cff&color=FFFFFF' class='avatar-initial rounded-circle'>&nbsp;{{ $user->name }}">
+                                                    {{ $user->name }}</option>
+                                            @else
+                                                <option value="{{ $user->id }}"
+                                                    {{ $user->posts->contains($post->id) ? 'selected' : '' }}
+                                                    data-content="<img src='{{ asset($user->profile) }}' class='rounded-circle' width='30' height='30'>&nbsp;{{ $user->name }}">
+                                                    {{ $user->name }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end align-items-center flex-wrap mt-2 pt-1">
+                        <div class="avatar-group d-flex align-items-center assigned-avatar">
+                            @foreach ($post->users as $user)
+                                <div class="avatar avatar-xs" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    aria-label="Helena" data-bs-original-title="{{ $user->name }}">
+                                    @if ($user->profile)
+                                        <img src="{{ asset($user->profile) }}" alt="Avatar"
+                                            class="rounded-circle  pull-up">
+                                    @else
+                                        <img src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&size=30&background=696cff&color=FFFFFF'
+                                            class='avatar-initial rounded-circle'>
+                                    @endif
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -70,40 +77,46 @@
                             </form>
                         </div>
                         <div class="dropdown d-none d-sm-block">
-                            <button class="btn p-0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                type="button" data-bs-auto-close="outside" id="sharedList">
-                                <i class='text-primary bx bx-share-alt'></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end w-px-300">
-                                <form action="{{ route('post.sharePosts') }}" method="post"
-                                    class="p-4 sharePostsForm">
-                                    @csrf
-                                    <input type="hidden" name="postId" value="{{ $post->id }}">
-                                    <div class="mb-2">
-                                        <select id="selectpickerLiveSearch selectpickerSelectDeselect"
-                                            name="sharedUsersIds[]" class="selectpicker w-100" data-style="btn-default"
-                                            data-live-search="true" multiple data-actions-box="false" data-size="5">
-                                            @foreach ($users as $user)
-                                                @if ($user->profile == '')
-                                                    <option value="{{ $user->id }}"
-                                                        {{ $user->posts->contains($post->id) ? 'selected' : '' }}
-                                                        data-content="<img src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&size=30&background=696cff&color=FFFFFF' class='avatar-initial rounded-circle'>&nbsp;{{ $user->name }}">
-                                                        {{ $user->name }}</option>
-                                                @else
-                                                    <option value="{{ $user->id }}"
-                                                        {{ $user->posts->contains($post->id) ? 'selected' : '' }}
-                                                        data-content="<img src='{{ asset($user->profile) }}' class='rounded-circle' width='30' height='30'>&nbsp;{{ $user->name }}">
-                                                        {{ $user->name }}</option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="d-grid gap-2 col-lg-6 mx-auto">
-                                        <button type="button"
-                                            class="btn rounded-pill btn-outline-primary shareButton">Share</button>
-                                    </div>
-                                </form>
-                            </div>
+                            <form action="{{ route('post.sharePosts') }}" method="post" class="sharePostsForm">
+                                @csrf
+                                <input type="hidden" name="postId" value="{{ $post->id }}">
+                                <div class="mb-2">
+                                    <select id="selectpickerLiveSearch selectpickerSelectDeselect"
+                                        name="sharedUsersIds[]" class="sharedUsersIds selectpicker w-150"
+                                        data-style="btn-default" data-live-search="true" multiple
+                                        data-actions-box="false" data-size="5">
+                                        @foreach ($users as $user)
+                                            @if ($user->profile == '')
+                                                <option value="{{ $user->id }}"
+                                                    {{ $user->posts->contains($post->id) ? 'selected' : '' }}
+                                                    data-content="<img src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&size=30&background=696cff&color=FFFFFF' class='avatar-initial rounded-circle'>&nbsp;{{ $user->name }}">
+                                                    {{ $user->name }}</option>
+                                            @else
+                                                <option value="{{ $user->id }}"
+                                                    {{ $user->posts->contains($post->id) ? 'selected' : '' }}
+                                                    data-content="<img src='{{ asset($user->profile) }}' class='rounded-circle' width='30' height='30'>&nbsp;{{ $user->name }}">
+                                                    {{ $user->name }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end align-items-center flex-wrap mt-2 pt-1">
+                        <div class="avatar-group d-flex align-items-center assigned-avatar">
+                            @foreach ($post->users as $user)
+                                <div class="avatar avatar-xs" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    aria-label="Helena" data-bs-original-title="{{ $user->name }}">
+                                    @if ($user->profile)
+                                        <img src="{{ asset($user->profile) }}" alt="Avatar"
+                                            class="rounded-circle  pull-up">
+                                    @else
+                                        <img src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&size=30&background=696cff&color=FFFFFF'
+                                            class='avatar-initial rounded-circle'>
+                                    @endif
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>

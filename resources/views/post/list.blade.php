@@ -49,7 +49,7 @@
                         value="{{ request()->search }}" />
                 </div>
                 <div class="col-md-2">
-                    <a href="{{ route('post.sharePostsList') }}" type="reset" class="btn btn-label-secondary">Cancel</a>
+                    <a href="{{ route('post.list') }}" type="reset" class="btn btn-label-secondary">Cancel</a>
                 </div>
                 <div class="col-md-4 text-md-end">
                     <a href="{{ route('post.create') }}" class="btn btn-primary">
@@ -62,8 +62,8 @@
 
     <div class="row mb-5" id="postList">
         @include('_partials.post_list')
-        {{-- Pagination --}}
     </div>
+
     @if ($posts->links() != '')
         <div class="card">
             <div class="card-body">
@@ -132,18 +132,39 @@
                 })
             });
 
-            $(document).on('change', '.status', function() {
+            $(document).on('change', '.status', function(event) {
+                event.stopPropagation();
                 $.ajax({
                     url: "{{ route('post.list') }}",
                     method: 'GET',
                     data: {
-                        status: $(this).val(),
+                        status: $(".status option:selected").val(),
                         is_ajax: true
                     },
                     success: function(data) {
                         $('#postList').html(data)
                     }
                 })
+            });
+
+            $(document).on("change", ".sharedUsersIds", function(event) {
+                event.stopPropagation();
+                var formData = $(this).closest('.sharePostsForm').serialize();
+
+                // Send AJAX request
+                $.ajax({
+                    url: "{{ route('post.sharePosts') }}",
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        // Handle success response here if needed
+                        console.log(response);
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error response here if needed
+                        console.error(xhr.responseText);
+                    }
+                });
             });
 
             $(document).on('change', '.selectUserSearch', function() {
@@ -205,28 +226,27 @@
 
             $(document).on('change', '.postType', function() {
                 let postType = $(this).val();
-                chnagePostType(postType);
+                // chnagePostType(postType);
             });
 
-            let postType = $(".postType option:selected").val();
-            chnagePostType(postType);
+            // let postType = $(".postType option:selected").val();
+            // chnagePostType(postType);
 
+            // function chnagePostType(post) {
+            //     if (post != "") {
+            //         $.ajax({
+            //             url: "{{ route('post.list') }}",
+            //             method: 'GET',
+            //             data: {
+            //                 post_type: post,
+            //                 is_ajax: true
+            //             },
+            //             success: function(data) {
+            //                 $('#postList').html(data)
+            //             }
+            //         });
+            //     }
+            // }
         });
-
-        function chnagePostType(post) {
-            if (post != "") {
-                $.ajax({
-                    url: "{{ route('post.list') }}",
-                    method: 'GET',
-                    data: {
-                        post_type: post,
-                        is_ajax: true
-                    },
-                    success: function(data) {
-                        $('#postList').html(data)
-                    }
-                });
-            }
-        }
     </script>
 @endsection
