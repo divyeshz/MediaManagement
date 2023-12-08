@@ -43,7 +43,7 @@ class UserController extends Controller
     }
 
 
-    $users = $this->PSS($query, $request);
+    $users = $this->PaginateSortStatus($query, $request);
 
     if ($request->is_ajax == true) {
       return view('_partials.user_list', compact('users'));
@@ -133,18 +133,14 @@ class UserController extends Controller
   public function status(Request $request)
   {
     $request->validate([
-      'id'        => 'required',
-      'is_active' => 'numeric'
+      'id'        => 'required|exists:users',
+      'is_active' => 'required|boolean'
     ]);
 
-    $status = User::where('id', $request->id)->update([
-      'is_active'     => $request->is_active,
-    ]);
-    if ($status) {
-      return $this->success(200, 'Status Updated SuccessFully!!!');
-    } else {
-      return $this->error(400, 'Status Updated Failed!!!');
-    }
+    $status = User::findOrFail('id', $request->id);
+    $status->update(['is_active'     => $request->is_active]);
+
+    return $this->success(200, 'Status Updated SuccessFully!!!');
   }
 
   /* Profile page */

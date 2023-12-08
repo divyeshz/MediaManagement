@@ -17,7 +17,7 @@ class PostController extends Controller
    */
   public function index(Request $request)
   {
-    $users = User::where('id', '<>', Auth::user()->id)->get();
+    $users = User::whereNot('id', Auth::user()->id)->get();
     $query = Post::query();
 
     // Apply search filters for 'name', 'email', and 'gender' columns
@@ -39,7 +39,7 @@ class PostController extends Controller
       $query->where('post_type', $request->post_type);
     }
 
-    $posts = $this->PSS($query, $request);
+    $posts = $this->PaginateSortStatus($query, $request);
 
     if ($request->is_ajax == true) {
       return view('_partials.post_list', compact('posts', "users"));
@@ -49,10 +49,14 @@ class PostController extends Controller
 
   /**
    * Show the form for creating a new resource.
+   * Show the form for editing the specified resource.
    */
-  public function create()
+  public function createEdit(string $id = null)
   {
     $post = null;
+    if($id){
+      $post = Post::findOrFail($id);
+    }
     return view("post.addEdit", compact("post"));
   }
 
@@ -90,15 +94,6 @@ class PostController extends Controller
     }
 
     return response()->json(['success' => true, 'message' => 'Insert Successfully']);
-  }
-
-  /**
-   * Show the form for editing the specified resource.
-   */
-  public function edit(string $id)
-  {
-    $post = Post::findOrFail($id);
-    return view('post.addEdit', compact('post'));
   }
 
   /**
@@ -203,7 +198,7 @@ class PostController extends Controller
   /* Render shared Posts */
   public function sharePostsList(Request $request)
   {
-    $users = User::where('id', '<>', Auth::user()->id)->get();
+    $users = User::whereNot('id', Auth::user()->id)->get();
     $appendable = [];
 
     // Create appendable array for non-empty query parameters except 'page' and '_token'

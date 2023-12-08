@@ -5,7 +5,7 @@ namespace app\Traits;
 trait PaginateSortStatusTrait
 {
   /* function to check status, order by column and pagination */
-  public function PSS($query, $request)
+  public function PaginateSortStatus($query, $request)
   {
 
     $sortableColumns = ['name', 'email', 'gender']; // Define columns that can be sorted
