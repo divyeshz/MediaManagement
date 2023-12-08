@@ -91,7 +91,7 @@
 
                         <div class="mb-3">
                             <div class="form-check">
-                                <input type="checkbox" name="is_active" value="1" class="form-check-input"
+                                <input type="checkbox" {{ $post && $post->is_active == true ? 'checked' : '' }} name="is_active" value="1" class="form-check-input"
                                     id="bs-validation-checkbox" />
                                 <label class="form-check-label" for="bs-validation-checkbox">Active</label>
                                 <div class="invalid-feedback"> You must agree before submitting. </div>
