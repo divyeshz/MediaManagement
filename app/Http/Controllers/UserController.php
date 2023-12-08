@@ -77,7 +77,7 @@ class UserController extends Controller
 
     $user = User::findOrFail($id);
 
-    $profile = "";
+    $profile = null;
     if ($request->hasfile('profile')) {
 
       // Remove Old Image

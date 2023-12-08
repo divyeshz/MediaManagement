@@ -35,4 +35,9 @@ class Post  extends BaseModel
   {
     return $this->belongsToMany(User::class, 'shared_posts', 'post_id', 'user_id');
   }
+
+  public function owner()
+  {
+    return $this->belongsTo(User::class, 'created_by');
+  }
 }
