@@ -41,9 +41,9 @@ Route::group(['middleware' => ['auth']], function () {
   Route::controller(PostController::class)->group(function () {
     Route::prefix('post')->group(function () {
       Route::get('list', 'index')->name('post.list');
-      Route::get('create', 'create')->name('post.create');
+      Route::get('create', 'createEdit')->name('post.create');
       Route::post('store', 'store')->name('post.store');
-      Route::get('edit/{id}', 'edit')->name('post.edit');
+      Route::get('edit/{id}', 'createEdit')->name('post.edit');
       Route::post('update/{id}', 'update')->name('post.update');
       Route::post('destroy/{id}', 'destroy')->name('post.destroy');
       Route::post('status', 'status')->name('post.status');
