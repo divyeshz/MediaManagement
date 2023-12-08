@@ -17,6 +17,10 @@ class UserController extends Controller
    */
   public function index(Request $request)
   {
+    $request->validate([
+      'search'      => 'nullable|string',
+      'gender'      => 'nullable|string',
+    ]);
 
     $query = User::query();
 
@@ -36,12 +40,6 @@ class UserController extends Controller
     if ($request->has("gender") && $request->filled('gender')) {
       $query->where('gender', $request->gender);
     }
-
-    // Apply filters 'status' columns
-    if ($request->has("status") && $request->filled('status')) {
-      $query->where('is_active', $request->status);
-    }
-
 
     $users = $this->PaginateSortStatus($query, $request);
 
@@ -137,8 +135,8 @@ class UserController extends Controller
       'is_active' => 'required|boolean'
     ]);
 
-    $status = User::findOrFail('id', $request->id);
-    $status->update(['is_active'     => $request->is_active]);
+    $status = User::findOrFail($request->id);
+    $status->update(['is_active' => $request->is_active]);
 
     return $this->success(200, 'Status Updated SuccessFully!!!');
   }

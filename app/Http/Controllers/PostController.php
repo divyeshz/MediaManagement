@@ -17,6 +17,13 @@ class PostController extends Controller
    */
   public function index(Request $request)
   {
+
+    $request->validate([
+      'search'        => 'nullable|string',
+      'sharedUserIds' => 'nullable',
+      'post_type'     => 'nullable|string',
+    ]);
+
     $users = User::whereNot('id', Auth::user()->id)->get();
     $query = Post::query();
 
@@ -198,6 +205,13 @@ class PostController extends Controller
   /* Render shared Posts */
   public function sharePostsList(Request $request)
   {
+    $request->validate([
+      'search'        => 'nullable|string',
+      'sharedUserIds' => 'nullable',
+      'post_type'     => 'nullable|string',
+      'status'        => 'nullable|boolean',
+    ]);
+
     $users = User::whereNot('id', Auth::user()->id)->get();
     $appendable = [];
 
