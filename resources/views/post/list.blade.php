@@ -134,15 +134,18 @@
 
             $(document).on('change', '.status', function(event) {
                 event.stopPropagation();
+                let postType = $(".postType option:selected").val();
                 $.ajax({
                     url: "{{ route('post.list') }}",
                     method: 'GET',
                     data: {
                         status: $(".status option:selected").val(),
+                        post_type: postType,
                         is_ajax: true
                     },
                     success: function(data) {
-                        $('#postList').html(data)
+                        $('#postList').html(data);
+                        $('.sharedUsersIds').selectpicker('refresh');
                     }
                 })
             });
@@ -183,7 +186,8 @@
                         is_ajax: true
                     },
                     success: function(data) {
-                        $('#postList').html(data)
+                        $('#postList').html(data);
+                        $('.sharedUsersIds').selectpicker('refresh');
                     }
                 });
             });
@@ -226,27 +230,28 @@
 
             $(document).on('change', '.postType', function() {
                 let postType = $(this).val();
-                // chnagePostType(postType);
+                chnagePostType(postType);
             });
 
-            // let postType = $(".postType option:selected").val();
-            // chnagePostType(postType);
+            let postType = $(".postType option:selected").val();
+            chnagePostType(postType);
 
-            // function chnagePostType(post) {
-            //     if (post != "") {
-            //         $.ajax({
-            //             url: "{{ route('post.list') }}",
-            //             method: 'GET',
-            //             data: {
-            //                 post_type: post,
-            //                 is_ajax: true
-            //             },
-            //             success: function(data) {
-            //                 $('#postList').html(data)
-            //             }
-            //         });
-            //     }
-            // }
+            function chnagePostType(post) {
+                if (post != "") {
+                    $.ajax({
+                        url: "{{ route('post.list') }}",
+                        method: 'GET',
+                        data: {
+                            post_type: post,
+                            is_ajax: true
+                        },
+                        success: function(data) {
+                            $('#postList').html(data);
+                            $('.sharedUsersIds').selectpicker('refresh');
+                        }
+                    });
+                }
+            }
         });
     </script>
 @endsection
