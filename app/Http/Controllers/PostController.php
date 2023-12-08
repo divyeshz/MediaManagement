@@ -190,7 +190,7 @@ class PostController extends Controller
   {
     $request->validate([
       'postId'          => 'required|string|exists:posts,id',
-      'sharedUsersIds'  => 'required|array|exists:users,id',
+      'sharedUsersIds'  => 'array|nullable',
     ]);
 
     $post = Post::findOrFail($request->postId);
@@ -205,6 +205,9 @@ class PostController extends Controller
       foreach ($request->sharedUsersIds as $key => $userId) {
         $post->users()->attach($request->sharedUsersIds[$key]);
       }
+    } else {
+      // Delete Old users of requested video from the database
+      $post->users()->detach();
     }
     return redirect()->route('post.list')->with('success', 'Posts Shared successfully');
   }

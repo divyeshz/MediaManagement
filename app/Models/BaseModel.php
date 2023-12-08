@@ -29,8 +29,6 @@ class BaseModel extends Model
         static::deleting(function ($module) {
             $userId = auth()->id() ?? null;
             $module->deleted_by = $userId;
-            $module->is_deleted = 1;
-            $module->save();
         });
     }
 }
