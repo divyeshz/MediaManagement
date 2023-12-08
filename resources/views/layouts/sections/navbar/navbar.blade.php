@@ -81,8 +81,10 @@
                         <img src="{{ asset('' . str_replace('/profile/', '/profile/thumbnail/', Auth::user()->profile) . '') }}"
                             alt class="w-px-40 h-auto rounded-circle">
                     @else
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode(isset(Auth::user()->name)) }}&size=41&background=696cff&color=FFFFFF"
-                            class="w-px-40 h-auto avatar-initial rounded-circle">
+                        @if (isset(Auth::user()->name))
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&size=41&background=696cff&color=FFFFFF"
+                                class="w-px-40 h-auto avatar-initial rounded-circle">
+                        @endif
                     @endif
                 </div>
             </a>
@@ -97,8 +99,10 @@
                                         <img src="{{ asset('' . str_replace('/profile/', '/profile/thumbnail/', Auth::user()->profile) . '') }}"
                                             alt class="w-px-40 h-auto rounded-circle">
                                     @else
-                                        <img src="https://ui-avatars.com/api/?name={{ urlencode(isset(Auth::user()->name)) }}&size=41&background=696cff&color=FFFFFF"
-                                            class="w-px-40 h-auto avatar-initial rounded-circle">
+                                        @if (isset(Auth::user()->name))
+                                            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&size=41&background=696cff&color=FFFFFF"
+                                                class="w-px-40 h-auto avatar-initial rounded-circle">
+                                        @endif
                                     @endif
                                 </div>
                             </div>
