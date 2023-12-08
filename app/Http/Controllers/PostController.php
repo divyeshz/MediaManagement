@@ -30,6 +30,19 @@ class PostController extends Controller
       });
     }
 
+    // Apply filters 'status' columns
+    if ($request->has("status") && $request->filled('status')) {
+      $query->where('is_active', $request->status);
+    }
+
+    if ($request->has("sharedUserIds") && $request->filled('sharedUserIds')) {
+      $query->whereIn('created_by', $request->sharedUserIds);
+    }
+
+    if ($request->has("post_type") && $request->filled('post_type')) {
+      $query->where('post_type', $request->post_type);
+    }
+
     $appendable = [];
 
     // Create appendable array for non-empty query parameters except 'page' and '_token'
@@ -219,6 +232,9 @@ class PostController extends Controller
       }
       if ($request->has("sharedUserIds") && $request->filled('sharedUserIds')) {
         $query->whereIn('created_by', $request->sharedUserIds);
+      }
+      if ($request->has("post_type") && $request->filled('post_type')) {
+        $query->where('post_type', $request->post_type);
       }
     })->paginate(10)->appends($appendable);
 

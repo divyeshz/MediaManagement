@@ -27,11 +27,31 @@
     <div class="card mb-4">
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-md-3">
+                <div class="col-md-2">
+                    <select name="postType" id="selectpickerBasic" placeholder="Select Post Type"
+                        class="postType selectpicker w-100" data-style="btn-default">
+                        <option {{ request()->input('post_type') == 'image' ? 'selected' : 'selected' }} value="image">
+                            Image
+                        </option>
+                        <option {{ request()->input('post_type') == 'text' ? 'selected' : '' }} value="text">Text</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="status" id="selectpickerBasic" placeholder="Select Status"
+                        class="status selectpicker w-100" data-style="btn-default">
+                        <option value="" selected>Select Status</option>
+                        <option {{ request()->input('status') == '1' ? 'selected' : '' }} value="1">Active</option>
+                        <option {{ request()->input('status') == '0' ? 'selected' : '' }} value="0">Inactive</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
                     <input type="text" name='search' class="form-control" id="search" placeholder="Search"
                         value="{{ request()->search }}" />
                 </div>
-                <div class="col-md-9 text-md-end">
+                <div class="col-md-2">
+                    <a href="{{ route('post.sharePostsList') }}" type="reset" class="btn btn-label-secondary">Cancel</a>
+                </div>
+                <div class="col-md-4 text-md-end">
                     <a href="{{ route('post.create') }}" class="btn btn-primary">
                         <span class="tf-icons bx bx-plus me-1"></span>Add
                     </a>
@@ -98,7 +118,6 @@
                 });
             });
 
-
             $(document).on('keyup', '#search', function() {
                 $.ajax({
                     url: "{{ route('post.list') }}",
@@ -111,6 +130,41 @@
                         $('#postList').html(data)
                     }
                 })
+            });
+
+            $(document).on('change', '.status', function() {
+                $.ajax({
+                    url: "{{ route('post.list') }}",
+                    method: 'GET',
+                    data: {
+                        status: $(this).val(),
+                        is_ajax: true
+                    },
+                    success: function(data) {
+                        $('#postList').html(data)
+                    }
+                })
+            });
+
+            $(document).on('change', '.selectUserSearch', function() {
+                var sharedUserIds = [];
+
+                // Iterate through each select box
+                $(this).find('option:selected').each(function() {
+                    sharedUserIds.push($(this).val());
+                });
+
+                $.ajax({
+                    url: "{{ route('post.list') }}",
+                    method: 'GET',
+                    data: {
+                        sharedUserIds: sharedUserIds,
+                        is_ajax: true
+                    },
+                    success: function(data) {
+                        $('#postList').html(data)
+                    }
+                });
             });
 
             $(document).on('click', '.shareButton', function() {
@@ -149,6 +203,30 @@
                 });
             });
 
+            $(document).on('change', '.postType', function() {
+                let postType = $(this).val();
+                chnagePostType(postType);
+            });
+
+            let postType = $(".postType option:selected").val();
+            chnagePostType(postType);
+
         });
+
+        function chnagePostType(post) {
+            if (post != "") {
+                $.ajax({
+                    url: "{{ route('post.list') }}",
+                    method: 'GET',
+                    data: {
+                        post_type: post,
+                        is_ajax: true
+                    },
+                    success: function(data) {
+                        $('#postList').html(data)
+                    }
+                });
+            }
+        }
     </script>
 @endsection

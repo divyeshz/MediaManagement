@@ -28,9 +28,18 @@
         <div class="card-body">
             <div class="row g-3">
                 <div class="col-md-2">
+                    <select name="postType" id="selectpickerBasic" placeholder="Select Post Type"
+                        class="postType selectpicker w-100" data-style="btn-default">
+                        <option {{ request()->input('post_type') == 'image' ? 'selected' : 'selected' }} value="image">
+                            Image
+                        </option>
+                        <option {{ request()->input('post_type') == 'text' ? 'selected' : '' }} value="text">Text</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
                     <select id="selectpickerLiveSearch selectpickerSelectDeselect " name="sharedUsersIds[]"
-                        class="selectpicker w-100 selectUserSearch" data-style="btn-default" data-live-search="false" multiple
-                        data-actions-box="false" data-size="5" placeholder="Selcte User">
+                        class="selectpicker w-100 selectUserSearch" data-style="btn-default" data-live-search="false"
+                        multiple data-actions-box="false" data-size="5" placeholder="Selcte User">
                         @foreach ($users as $user)
                             @if ($user->profile == '')
                                 <option value="{{ $user->id }}"
@@ -45,8 +54,8 @@
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <select name="status" id="selectpickerBasic" placeholder="Select Status" class="selectpicker w-100"
-                        data-style="btn-default">
+                    <select name="status" id="selectpickerBasic" placeholder="Select Status"
+                        class="status selectpicker w-100" data-style="btn-default">
                         <option value="" selected>Select Status</option>
                         <option {{ request()->input('status') == '1' ? 'selected' : '' }} value="1">Active</option>
                         <option {{ request()->input('status') == '0' ? 'selected' : '' }} value="0">Inactive</option>
@@ -59,7 +68,7 @@
                 <div class="col-md-2">
                     <a href="{{ route('post.sharePostsList') }}" type="reset" class="btn btn-label-secondary">Cancel</a>
                 </div>
-                <div class="col-md-4 text-md-end">
+                <div class="col-md-2 text-md-end">
                     <a href="{{ route('post.create') }}" class="btn btn-primary">
                         <span class="tf-icons bx bx-plus me-1"></span>Add
                     </a>
@@ -95,7 +104,7 @@
                 })
             });
 
-            $(document).on('change', '#selectpickerBasic', function() {
+            $(document).on('change', '.status', function() {
                 $.ajax({
                     url: "{{ route('post.sharePostsList') }}",
                     method: 'GET',
@@ -128,6 +137,30 @@
                     }
                 });
             });
+
+            $(document).on('change', '.postType', function() {
+                let postType = $(this).val();
+                chnagePostType(postType);
+            });
+
+            let postType = $(".postType option:selected").val();
+            chnagePostType(postType);
         });
+
+        function chnagePostType(post) {
+            if (post != "") {
+                $.ajax({
+                    url: "{{ route('post.sharePostsList') }}",
+                    method: 'GET',
+                    data: {
+                        post_type: post,
+                        is_ajax: true
+                    },
+                    success: function(data) {
+                        $('#sharedPostList').html(data);
+                    }
+                });
+            }
+        }
     </script>
 @endsection
