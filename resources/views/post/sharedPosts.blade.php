@@ -40,7 +40,7 @@
         </div>
     </div>
 
-    <div class="row mb-5" id="postList">
+    <div class="row mb-5" id="sharedPostList">
         @include('_partials.shared_post_list')
         {{-- Pagination --}}
     </div>
@@ -55,14 +55,14 @@
         $(document).ready(function() {
             $(document).on('keyup', '#search', function() {
                 $.ajax({
-                    url: "{{ route('post.list') }}",
+                    url: "{{ route('post.sharePostsList') }}",
                     method: 'GET',
                     data: {
                         search: $(this).val(),
                         is_ajax: true
                     },
                     success: function(data) {
-                        $('#postList').html(data)
+                        $('#sharedPostList').html(data)
                     }
                 })
             });

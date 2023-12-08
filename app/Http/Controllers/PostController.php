@@ -197,9 +197,29 @@ class PostController extends Controller
   }
 
   /* Render shared Posts */
-  public function sharePostsList()
+  public function sharePostsList(Request $request)
   {
-    $sharedPosts = auth()->user()->posts()->get();
-    return view('post.sharedPosts', compact('sharedPosts'));
+
+    $appendable = [];
+
+    // Create appendable array for non-empty query parameters except 'page' and '_token'
+    foreach ($request->except(['page', '_token', 'is_ajax']) as $key => $value) {
+      if (!empty($value)) {
+        $appendable[$key] = $value;
+      }
+    }
+
+    // Apply search filters for 'name', 'email', and 'gender' columns
+    $sharedPosts = auth()->user()->posts()->where(function ($query) use ($request) {
+      if ($request->search != null) {
+        $query->where('name', 'Like', '%' . $request->search . '%')->orWhere('text', 'Like', '%' . $request->search . '%');
+      }
+    })->paginate(10)->appends($appendable);
+
+
+    if ($request->is_ajax == true) {
+      return view('_partials.shared_post_list', compact('sharedPosts'));
+    }
+    return view("post.sharedPosts", compact("sharedPosts"));
   }
 }
