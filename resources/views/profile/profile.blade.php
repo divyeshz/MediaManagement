@@ -36,8 +36,13 @@
                 </div>
                 <div class="user-profile-header d-flex flex-column flex-sm-row text-sm-start text-center mb-4">
                     <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
-                        <img src="{{ asset(Auth::user()->profile) }}" alt="user image"
-                            class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img">
+                        @if (Auth::user()->profile)
+                            <img src="{{ asset(Auth::user()->profile) }}" alt="user image"
+                                class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img">
+                        @else
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&size=41&background=696cff&color=FFFFFF"
+                                class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img avatar-initial rounded-circle">
+                        @endif
                     </div>
                     <div class="flex-grow-1 mt-3 mt-sm-5">
                         <div
@@ -47,16 +52,14 @@
                                 <ul
                                     class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-2">
                                     <li class="list-inline-item fw-medium">
-                                        <i class='bx bx-pen'></i> Web Developer
-                                    </li>
-                                    <li class="list-inline-item fw-medium">
-                                        <i class='bx bx-map'></i> India
-                                    </li>
-                                    <li class="list-inline-item fw-medium">
-                                        <i class='bx bx-calendar-alt'></i> Joined April 2023
+                                        <i class='bx bx-envelope'></i> {{ Auth::user()->email }}
                                     </li>
                                 </ul>
                             </div>
+                            <a href="{{ route('user.edit', Auth::user()->id) }}"
+                                class="btn rounded-pill btn-icon btn-primary">
+                                <i class='bx bx-edit'></i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -75,23 +78,11 @@
                     <ul class="list-unstyled mb-4 mt-3">
                         <li class="d-flex align-items-center mb-3"><i class="bx bx-user"></i><span
                                 class="fw-medium mx-2">Full Name:</span> <span>{{ Auth::user()->name }}</span></li>
-                        <li class="d-flex align-items-center mb-3"><i class="bx bx-check"></i><span
-                                class="fw-medium mx-2">Status:</span>
-                            <span>{{ Auth::user()->is_active == true ? 'Active' : 'Inactive' }} </span>
-                        </li>
-                        <li class="d-flex align-items-center mb-3"><i class="bx bx-star"></i><span
-                                class="fw-medium mx-2">Role:</span> <span>Developer</span></li>
-                        <li class="d-flex align-items-center mb-3"><i class="bx bx-flag"></i><span
-                                class="fw-medium mx-2">Country:</span> <span>India</span></li>
-                        <li class="d-flex align-items-center mb-3"><i class="bx bx-detail"></i><span
-                                class="fw-medium mx-2">Languages:</span> <span>English</span></li>
                     </ul>
                     <small class="text-muted text-uppercase">Contacts</small>
                     <ul class="list-unstyled mb-4 mt-3">
                         <li class="d-flex align-items-center mb-3"><i class="bx bx-phone"></i><span
                                 class="fw-medium mx-2">Contact:</span> <span>{{ Auth::user()->phone ?? '-' }}</span></li>
-                        <li class="d-flex align-items-center mb-3"><i class="bx bx-chat"></i><span
-                                class="fw-medium mx-2">Skype:</span> <span>john.doe</span></li>
                         <li class="d-flex align-items-center mb-3"><i class="bx bx-envelope"></i><span
                                 class="fw-medium mx-2">Email:</span> <span>{{ Auth::user()->email }}</span></li>
                     </ul>

@@ -23,6 +23,7 @@ class UserController extends Controller
     ]);
 
     $query = User::query();
+    $query = $query->whereNot('id', auth()->id());
 
     // Apply search filters for 'name', 'email', and 'gender' columns
     if ($request->has('search')) {
