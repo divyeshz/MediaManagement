@@ -26,6 +26,8 @@
 @endsection
 
 @section('vendor-script')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js"></script>
     <script src="{{ asset('assets/vendor/libs/quill/katex.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/quill/quill.js') }}"></script>
 @endsection
@@ -60,26 +62,24 @@
                     <div class="tab-pane fade {{ $post && $post->post_type == 'image' ? 'active show' : '' }} {{ $post == null ? 'active show' : '' }}"
                         id="form-tabs-image" role="tabpanel">
                         @if ($post == null)
-                            <form action="{{ route('post.store') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('post.store') }}" method="post" id="AddEditImageForm"
+                                enctype="multipart/form-data">
                             @else
-                                <form action="{{ route('post.update', $post->id) }}" method="post"
+                                <form action="{{ route('post.update', $post->id) }}" id="AddEditImageForm" method="post"
                                     enctype="multipart/form-data">
                         @endif
                         @csrf
 
                         <input type="hidden" name="post_type" value="image">
                         <div class="mb-3">
-                            <label class="form-label" for="bs-validation-name">Image Name</label>
+                            <label class="form-label" for="">Image Name</label>
                             <input type="text" name='name' value="{{ $post ? $post->name : '' }}"
-                                class="form-control" id="bs-validation-name" placeholder="Image Name" value=""
-                                required />
-                            <div class="valid-feedback"> Looks good! </div>
-                            <div class="invalid-feedback"> Please enter your name. </div>
+                                class="form-control" id="" placeholder="Image Name" value="" required />
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label" for="bs-validation-upload-file">Image</label>
-                            <input type="file" name='image' class="form-control" id="bs-validation-upload-file" />
+                            <label class="form-label" for="">Image</label>
+                            <input type="file" name='image' class="form-control" id="" required />
                         </div>
 
                         @if (isset($post) && $post != null && $post->image != '')
@@ -91,10 +91,9 @@
 
                         <div class="mb-3">
                             <div class="form-check">
-                                <input type="checkbox" {{ $post && $post->is_active == true ? 'checked' : '' }} name="is_active" value="1" class="form-check-input"
-                                    id="bs-validation-checkbox" />
-                                <label class="form-check-label" for="bs-validation-checkbox">Active</label>
-                                <div class="invalid-feedback"> You must agree before submitting. </div>
+                                <input type="checkbox" {{ $post && $post->is_active == true ? 'checked' : '' }}
+                                    name="is_active" value="1" class="form-check-input" id="is_active" />
+                                <label class="form-check-label" for="is_active">Active</label>
                             </div>
                         </div>
 
@@ -117,6 +116,7 @@
                             @else
                                 <form action="{{ route('post.update', $post->id) }}" id="TextForm" method="post">
                         @endif
+                        @csrf
                         <input type="hidden" name="post_type" value="text">
 
                         <div class="mb-3">
@@ -124,15 +124,9 @@
                             <div id="text-editor">
                                 @if ($post && $post->text != '')
                                     {!! $post->text !!}
-                                @else
-                                    <h6>Quill Rich Text Editor</h6>
-                                    <p> Cupcake ipsum dolor sit amet. Halvah cheesecake chocolate bar gummi
-                                        bears cupcake. Pie macaroon bear claw. Soufflé I love candy canes I love
-                                        cotton candy I love. </p>
                                 @endif
                             </div>
-                            <div class="valid-feedback"> Looks good! </div>
-                            <div class="invalid-feedback"> Please enter your name. </div>
+                            <label id="text-error" class="error d-none" for="text">Please specify text</label>
                         </div>
 
                         <div class="mb-3">
@@ -144,7 +138,6 @@
                                 <div class="invalid-feedback"> You must agree before submitting. </div>
                             </div>
                         </div>
-
 
                         <div class="row justify-content-start">
                             <div class="col-sm-9">
@@ -212,7 +205,7 @@
                 [{
                     direction: 'rtl'
                 }],
-                ['link', 'image', 'video', 'formula'],
+                ['link', 'formula'],
                 ['clean']
             ];
             const fullEditor = new Quill('#text-editor', {
@@ -225,39 +218,58 @@
                 theme: 'snow'
             });
 
-            $(document).on("click", ".img_form_submit_btn", function() {
-                let url = $("#TextForm").attr('action');
-                let is_active = $("#is_active").prop('checked') ? 1 : 0;
-                var editorContent = fullEditor.root.innerHTML; // Get Quill editor content as HTML
+            $.validator.addMethod('fileSize', function(value, element, param) {
+                return this.optional(element) || (element.files[0].size <= param);
+            }, 'File size must be less than {0} bytes');
 
-                // Send an AJAX request to store the Quill editor content
-                $.ajax({
-                    url: url,
-                    method: 'POST',
-                    data: {
-                        text: editorContent,
-                        post_type: 'text',
-                        is_active: is_active,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            // Show a toaster message using a library like Toastr
-                            toastr.success(response.message);
-
-                            // Redirect to the 'post.list' route after a delay
-                            setTimeout(function() {
-                                window.location.href = "{{ route('post.list') }}";
-                            }, 3000); // Redirect after 3 seconds (adjust the delay as needed)
-                        } else {
-                            toastr.error(response.message);
+            $("#AddEditImageForm").validate({
+                rules: {
+                    name: "required",
+                    image: {
+                        accept: "image/*",
+                        fileSize: {
+                            depends: function(element) {
+                                return $(element).val() !== ''; // Check if a file is selected
+                            },
+                            param: 5 * 1024 * 1024, // 5MB in bytes
+                            // Add custom method to display message only when a file is uploaded
+                            method: function(value, element) {
+                                if ($(element).val() !== '' && !/(\.|\/)(png|jpe?g)$/i.test(value)) {
+                                    return false;
+                                }
+                                return true;
+                            }
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        // Handle error
-                        console.error('There was an error:', error);
                     }
-                });
+                },
+                messages: {
+                    name: "Please specify your name",
+                    image: {
+                        accept: "Please select a valid image file (PNG, JPG, JPEG)",
+                        fileSize: "File size must be less than 5MB"
+                    }
+                }
+            });
+
+            $(document).on("click", ".img_form_submit_btn", function(event) {
+                event.preventDefault();
+                var editorContent = fullEditor.root.innerHTML;
+
+                if (editorContent !== '<p><br></p>') {
+                    $("#text-error").addClass("d-none");
+                    // Content is not blank or '<p><br></p>'
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'text',
+                        value: editorContent
+                    }).appendTo('#TextForm');
+
+                    // Submit the form
+                    $('#TextForm').submit();
+                } else {
+                    // Show an error or perform some action when content is blank or '<p><br></p>'
+                    $("#text-error").removeClass("d-none");
+                }
             });
         });
     </script>

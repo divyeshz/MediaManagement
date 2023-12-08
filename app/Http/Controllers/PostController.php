@@ -96,11 +96,8 @@ class PostController extends Controller
 
       // store the data
       $post->update(['image' => $image]);
-
-      return redirect()->route('post.list')->with('success', 'Insert SuccessFully!!!');
     }
-
-    return response()->json(['success' => true, 'message' => 'Insert Successfully']);
+    return redirect()->route('post.list')->with('success', 'Insert SuccessFully!!!');
   }
 
   /**
