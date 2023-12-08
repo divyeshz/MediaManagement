@@ -14,7 +14,7 @@
     },
     {
       "url": "/post/list",
-      "name": "Posts",
+      "name": "My Posts",
       "icon": "menu-icon tf-icons bx bx-photo-album",
       "slug": "post.list"
     },
