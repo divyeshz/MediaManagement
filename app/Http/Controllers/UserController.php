@@ -3,18 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\File;
-use Intervention\Image\Facades\Image;
 use App\Traits\AjaxResponse;
 use App\Traits\FileUpload;
+use App\Traits\PaginateSortStatusTrait;
 
 class UserController extends Controller
 {
 
-  use AjaxResponse, FileUpload;
+  use AjaxResponse, FileUpload, PaginateSortStatusTrait;
   /**
    * Display a listing of the resource.
    */
@@ -22,14 +19,6 @@ class UserController extends Controller
   {
 
     $query = User::query();
-
-    $sortableColumns = ['name', 'email', 'gender']; // Define columns that can be sorted
-
-    // Sorting logic
-    if ($request->has('sort_by') && in_array($request->sort_by, $sortableColumns)) {
-      $sortDirection = $request->has('sort_dir') && $request->sort_dir === 'desc' ? 'desc' : 'asc';
-      $query->orderBy($request->sort_by, $sortDirection);
-    }
 
     // Apply search filters for 'name', 'email', and 'gender' columns
     if ($request->has('search')) {
@@ -53,19 +42,9 @@ class UserController extends Controller
       $query->where('is_active', $request->status);
     }
 
-    // Set default per page value to 10 if 'per_page' parameter is not present or invalid
-    $perPage = $request->filled('per_page') ? intval($request->per_page) : 10;
 
-    $appendable = [];
+    $users = $this->PSS($query, $request);
 
-    // Create appendable array for non-empty query parameters except 'page' and '_token'
-    foreach ($request->except(['page', '_token', 'is_ajax']) as $key => $value) {
-      if (!empty($value)) {
-        $appendable[$key] = $value;
-      }
-    }
-
-    $users = $query->paginate($perPage)->appends($appendable);
     if ($request->is_ajax == true) {
       return view('_partials.user_list', compact('users'));
     }
@@ -112,7 +91,6 @@ class UserController extends Controller
       $filename = $this->createFilename($file);
       $this->createThumbnail($file, $filename, $user->id, 'profile/thumbnail');
       $profile = $this->createImage($file, $filename, $user->id, 'profile');
-
     } elseif ($user->profile != "" && $request->hidden_profile == "") {
 
       // Remove Old Image

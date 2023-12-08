@@ -7,10 +7,11 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\FileUpload;
+use App\Traits\PaginateSortStatusTrait;
 
 class PostController extends Controller
 {
-  use FileUpload;
+  use FileUpload, PaginateSortStatusTrait;
   /**
    * Display a listing of the resource.
    */
@@ -30,11 +31,6 @@ class PostController extends Controller
       });
     }
 
-    // Apply filters 'status' columns
-    if ($request->has("status") && $request->filled('status')) {
-      $query->where('is_active', $request->status);
-    }
-
     if ($request->has("sharedUserIds") && $request->filled('sharedUserIds')) {
       $query->whereIn('created_by', $request->sharedUserIds);
     }
@@ -43,16 +39,8 @@ class PostController extends Controller
       $query->where('post_type', $request->post_type);
     }
 
-    $appendable = [];
+    $posts = $this->PSS($query, $request);
 
-    // Create appendable array for non-empty query parameters except 'page' and '_token'
-    foreach ($request->except(['page', '_token', 'is_ajax']) as $key => $value) {
-      if (!empty($value)) {
-        $appendable[$key] = $value;
-      }
-    }
-
-    $posts = $query->orderBy('post_type', 'desc')->paginate(5)->appends($appendable);
     if ($request->is_ajax == true) {
       return view('_partials.post_list', compact('posts', "users"));
     }
