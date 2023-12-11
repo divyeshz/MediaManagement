@@ -3,15 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class Post  extends BaseModel
 {
   use HasFactory;
-
-  protected $primaryKey = 'id';
-  public $incrementing = false;
 
   protected $fillable = [
     'post_type',
@@ -24,12 +19,6 @@ class Post  extends BaseModel
     'deleted_by',
   ];
 
-  protected static function booted()
-  {
-    parent::booted();
-    static::bootMethod();
-  }
-
   // Define the relationship with users through the shared_posts table
   public function users()
   {
@@ -39,5 +28,11 @@ class Post  extends BaseModel
   public function owner()
   {
     return $this->belongsTo(User::class, 'created_by');
+  }
+
+  // Define the relationship with comments
+  public function comments()
+  {
+    return $this->hasMany(Comment::class);
   }
 }
