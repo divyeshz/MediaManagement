@@ -5,6 +5,22 @@
 @section('vendor-style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css') }}" />
+    <style>
+        .image_box {
+            border: 1px solid #e9ecef;
+            padding: 8px;
+            border-radius: 5px;
+            vertical-align: top;
+            text-align: center;
+            max-width: 100%;
+            margin-top: 10px;
+        }
+
+        .image {
+            max-width: 100%;
+            height: 100%;
+        }
+    </style>
 @endsection
 
 @section('vendor-script')
@@ -81,8 +97,12 @@
         @include('_partials.shared_post_list')
     </div>
 
+    <div id="commentModalDiv">
+    </div>
+
 @endsection
 
+@includeIf('components.commentModal')
 
 @section('page-script')
 
@@ -117,6 +137,7 @@
                     }
                 })
             });
+
             $(document).on('change', '.selectUserSearch', function() {
                 var sharedUserIds = [];
 
@@ -136,6 +157,89 @@
                         $('#sharedPostList').html(data)
                     }
                 });
+            });
+
+            $(document).on('click', '#commentModalBtn', function() {
+                let id = $(this).attr('data-id');
+                // Send AJAX request
+                $.ajax({
+                    url: "{{ route('comment.comments') }}",
+                    type: 'POST',
+                    data: {
+                        id: id,
+                        _token: "{{ csrf_token() }}",
+                    },
+                    success: function(response) {
+                        // Handle success response here if needed
+                        // console.log(response);
+                        $('#commentModalDiv').html(response);
+                        $('#commentModal').modal('show');
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error response here if needed
+                        console.error(xhr.responseText);
+                    }
+                });
+
+            });
+
+            $(document).on('click', '.commentStoreBtn', function(e) {
+                e.preventDefault();
+                // Send AJAX request
+                $.ajax({
+                    url: "{{ route('comment.commentStore') }}",
+                    type: 'POST',
+                    data: $("#commentForm").serialize(),
+                    success: function(response) {
+                        // Append or update the comments section within the modal
+                        $('#commentModal .modal-body').find('.comments-list').html($(response).find('.comments-list').html());
+
+                        // Clear the comment form
+                        $('#commentForm textarea[name="comment_text"]').val('');
+                        $('#commentForm input[name="edited_comment_id"]')
+                            .remove(); // Remove the hidden input
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error response here if needed
+                        console.error(xhr.responseText);
+                    }
+                });
+
+            });
+
+            $(document).on('click', '.editComment', function(e) {
+                e.preventDefault();
+                // Get the comment text
+                let commentText = $(this).closest('.media').find('.media-body p').text();
+                // Set the comment text to the textarea
+                $('#commentForm textarea[name="comment_text"]').val(commentText);
+
+                // Get the comment ID from the data attribute
+                let commentID = $(this).data('id');
+
+                // Create or update the hidden input field for comment ID
+                let hiddenInput = $('#commentForm input[name="edited_comment_id"]');
+                if (hiddenInput.length === 0) {
+                    // If the hidden input doesn't exist, create it
+                    hiddenInput = $('<input>').attr({
+                        type: 'hidden',
+                        name: 'edited_comment_id',
+                        value: commentID
+                    });
+                    $('#commentForm').append(hiddenInput);
+                } else {
+                    // If the hidden input exists, update its value
+                    hiddenInput.val(commentID);
+                }
+            });
+
+            $(document).on('click', '.resetCommentForm', function(e) {
+                e.preventDefault();
+                // Clear the comment form
+                $('#commentForm').trigger('reset'); // Reset the form
+
+                $('#commentForm textarea[name="comment_text"]').val('');
+                $('#commentForm input[name="edited_comment_id"]').remove(); // Remove the hidden input
             });
 
             $(document).on('change', '.postType', function() {

@@ -11,9 +11,11 @@
                         <div class="card-actions">
                             <form action="{{ route('post.destroy', $post->id) }}" class="delete-form" method="POST">
                                 @csrf
-                                <a href="{{ route('post.edit', $post->id) }}" class=" me-3"><i
+                                <a href="{{ route('post.edit', $post->id) }}" class=""><i
                                         class="bx bx-edit me-1"></i></a>
-                                <a href="javascript:;" class="delete"><i class="bx bx-trash me-1 text-primary"></i></a>
+                                <a href="javascript:;" class="delete"><i class="bx bx-trash me-1 text-danger"></i></a>
+                                <a href="javascript:;" data-id="{{ $post->id }}" id="commentModalBtn"
+                                    class="me-1 text-warning"><i class="bx bx-chat me-1"></i></a>
                             </form>
                         </div>
                         <div class="dropdown d-none d-sm-block">
@@ -24,7 +26,7 @@
                                     <select id="selectpickerLiveSearch selectpickerSelectDeselect"
                                         name="sharedUsersIds[]" class="selectpicker w-150 sharedUsersIds"
                                         data-style="btn-default" data-live-search="true" multiple
-                                        data-actions-box="false" data-size="5">
+                                        data-actions-box="false" data-size="5" placeholder="Share To">
                                         @foreach ($users as $user)
                                             @if ($user->profile == '')
                                                 <option value="{{ $user->id }}"
@@ -71,9 +73,11 @@
                         <div class="card-actions">
                             <form action="{{ route('post.destroy', $post->id) }}" class="delete-form" method="POST">
                                 @csrf
-                                <a href="{{ route('post.edit', $post->id) }}" class=" me-3"><i
+                                <a href="{{ route('post.edit', $post->id) }}" class=""><i
                                         class="bx bx-edit me-1"></i></a>
-                                <a href="javascript:;" class="delete"><i class="bx bx-trash me-1 text-primary"></i></a>
+                                <a href="javascript:;" class="delete"><i class="bx bx-trash me-1 text-danger"></i></a>
+                                <a href="javascript:;" data-id="{{ $post->id }}" id="commentModalBtn"
+                                    class="me-1 text-warning"><i class="bx bx-chat me-1"></i></a>
                             </form>
                         </div>
                         <div class="dropdown d-none d-sm-block">
@@ -84,7 +88,7 @@
                                     <select id="selectpickerLiveSearch selectpickerSelectDeselect"
                                         name="sharedUsersIds[]" class="sharedUsersIds selectpicker w-150"
                                         data-style="btn-default" data-live-search="true" multiple
-                                        data-actions-box="false" data-size="5">
+                                        data-actions-box="false" data-size="5" placeholder="Share To">
                                         @foreach ($users as $user)
                                             @if ($user->profile == '')
                                                 <option value="{{ $user->id }}"

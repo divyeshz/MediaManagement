@@ -5,6 +5,23 @@
 @section('vendor-style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/animate-css/animate.css') }}">
+    <style>
+        .image_box {
+            border: 1px solid #e9ecef;
+            padding: 8px;
+            border-radius: 5px;
+            vertical-align: top;
+            text-align: center;
+            max-width: 100%;
+            margin-top: 10px;
+        }
+
+        .image {
+            max-width: 100%;
+            height: 100%;
+        }
+    </style>
 @endsection
 
 @section('vendor-script')
@@ -73,8 +90,12 @@
             </div>
         </div>
     @endif
+
+    <div id="commentModalDiv">
+    </div>
 @endsection
 
+@includeIf('components.commentModal')
 
 @section('page-script')
 
@@ -231,6 +252,135 @@
             $(document).on('change', '.postType', function() {
                 let postType = $(this).val();
                 chnagePostType(postType);
+            });
+
+            $(document).on('click', '#commentModalBtn', function() {
+                let id = $(this).attr('data-id');
+                // Send AJAX request
+                $.ajax({
+                    url: "{{ route('comment.comments') }}",
+                    type: 'POST',
+                    data: {
+                        id: id,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        // Handle success response here if needed
+                        // console.log(response);
+                        $('#commentModalDiv').html(response);
+                        $('#commentModal').modal('show');
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error response here if needed
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+
+            $(document).on('click', '.commentStoreBtn', function(e) {
+                e.preventDefault();
+                // Send AJAX request
+                $.ajax({
+                    url: "{{ route('comment.commentStore') }}",
+                    type: 'POST',
+                    data: $('#commentForm').serialize(),
+                    success: function(response) {
+                        // Append or update the comments section within the modal
+                        $('#commentModal .modal-body').find('.comments-list').html($(response)
+                            .find('.comments-list').html());
+
+                        // Clear the comment form
+                        $('#commentForm textarea[name="comment_text"]').val('');
+                        $('#commentForm input[name="edited_comment_id"]')
+                            .remove(); // Remove the hidden input
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error response here if needed
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+
+            $(document).on('click', '.editComment', function(e) {
+                e.preventDefault();
+                // Get the comment text
+                let commentText = $(this).closest('.media').find('.media-body p').text();
+                // Set the comment text to the textarea
+                $('#commentForm textarea[name="comment_text"]').val(commentText);
+
+                // Get the comment ID from the data attribute
+                let commentID = $(this).data('id');
+
+                // Create or update the hidden input field for comment ID
+                let hiddenInput = $('#commentForm input[name="edited_comment_id"]');
+                if (hiddenInput.length === 0) {
+                    // If the hidden input doesn't exist, create it
+                    hiddenInput = $('<input>').attr({
+                        type: 'hidden',
+                        name: 'edited_comment_id',
+                        value: commentID
+                    });
+                    $('#commentForm').append(hiddenInput);
+                } else {
+                    // If the hidden input exists, update its value
+                    hiddenInput.val(commentID);
+                }
+            });
+
+            $(document).on('click', '.deleteComment', function(e) {
+                e.preventDefault();
+                let deleteButton = $(this); // Store reference to the delete button
+                let commentId = $(this).data('id');
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    customClass: {
+                        confirmButton: 'btn btn-primary me-3',
+                        cancelButton: 'btn btn-label-secondary'
+                    },
+                    buttonsStyling: false
+                }).then(function(result) {
+                    if (result.value) {
+                        $.ajax({
+                            url: "{{ route('comment.commentDestroy') }}",
+                            type: 'post',
+                            data: {
+                                comment_id: commentId,
+                                _token: '{{ csrf_token() }}' // Add CSRF token if required
+                            },
+                            success: function(response) {
+                                deleteButton.closest('.media')
+                                    .remove(); // Use stored reference to delete button
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Deleted!',
+                                    text: 'Your file has been deleted.',
+                                    customClass: {
+                                        confirmButton: 'btn btn-success'
+                                    }
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                // Handle error response if needed
+                                console.error(xhr.responseText);
+                            }
+                        });
+                    }
+                });
+            });
+
+            $(document).on('click', '.resetCommentForm', function(e) {
+                e.preventDefault();
+                // Clear the comment form
+                $('#commentForm').trigger('reset'); // Reset the form
+
+                $('#commentForm textarea[name="comment_text"]').val('');
+                $('#commentForm input[name="edited_comment_id"]').remove(); // Remove the hidden input
             });
 
             let postType = $(".postType option:selected").val();
