@@ -140,11 +140,13 @@
             });
 
             $(document).on('keyup', '#search', function() {
+              let postType = $(".postType option:selected").val();
                 $.ajax({
                     url: "{{ route('post.list') }}",
                     method: 'GET',
                     data: {
                         search: $(this).val(),
+                        post_type: postType,
                         is_ajax: true
                     },
                     success: function(data) {
@@ -154,7 +156,7 @@
             });
 
             $(document).on('change', '.status', function(event) {
-                event.stopPropagation();
+                event.preventDefault();
                 let postType = $(".postType option:selected").val();
                 $.ajax({
                     url: "{{ route('post.list') }}",
@@ -173,7 +175,7 @@
             });
 
             $(document).on("change", ".sharedUsersIds", function(event) {
-                event.stopPropagation();
+                event.preventDefault();
                 var formData = $(this).closest('.sharePostsForm').serialize();
 
                 // Send AJAX request

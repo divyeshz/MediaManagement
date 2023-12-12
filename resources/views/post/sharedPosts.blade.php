@@ -106,11 +106,13 @@
     <script>
         $(document).ready(function() {
             $(document).on('keyup', '#search', function() {
+              let postType = $(".postType option:selected").val();
                 $.ajax({
                     url: "{{ route('post.sharePostsList') }}",
                     method: 'GET',
                     data: {
                         search: $(this).val(),
+                        post_type: postType,
                         is_ajax: true
                     },
                     success: function(data) {
