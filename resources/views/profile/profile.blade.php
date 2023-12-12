@@ -40,8 +40,10 @@
                             <img src="{{ asset(Auth::user()->profile) }}" alt="user image"
                                 class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img">
                         @else
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&size=41&background=696cff&color=FFFFFF"
-                                class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img avatar-initial rounded-circle">
+                            <span
+                                class="avatar-initial d-flex justify-content-center align-items-center fw-bold fs-1 text-white d-block h-100 ms-0 ms-sm-4 rounded user-profile-img rounded-circle bg-primary">
+                                {{ implode('', array_map(fn($word) => strtoupper($word[0]), explode(' ', Auth::user()->name))) }}
+                            </span>
                         @endif
                     </div>
                     <div class="flex-grow-1 mt-3 mt-sm-5">

@@ -51,8 +51,7 @@
                                                             <img src="{{ asset($comment->user->profile) }}"
                                                                 alt="Avatar" class="rounded-circle">
                                                         @else
-                                                            <img src='https://ui-avatars.com/api/?name={{ urlencode($comment->user->name) }}&size=30&background=696cff&color=FFFFFF'
-                                                                class='avatar-initial rounded-circle'>
+                                                            <span class="avatar-initial rounded-circle bg-primary">{{ implode('', array_map(fn($word) => strtoupper($word[0]), explode(' ', $comment->user->name))) }} </span>
                                                         @endif
                                                     </div>
                                                     <div class="media-body">

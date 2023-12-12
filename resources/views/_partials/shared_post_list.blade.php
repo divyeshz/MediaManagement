@@ -24,8 +24,7 @@
                                 <div class="avatar avatar-xs" data-bs-toggle="tooltip" data-bs-placement="top"
                                     aria-label="{{ $post->owner->name }}"
                                     data-bs-original-title="{{ $post->owner->name }}">
-                                    <img src='https://ui-avatars.com/api/?name={{ urlencode($post->owner->name) }}&size=30&background=696cff&color=FFFFFF'
-                                        class='avatar-initial rounded-circle'>
+                                    <span class="avatar-initial rounded-circle bg-primary">{{ implode('', array_map(fn($word) => strtoupper($word[0]), explode(' ', $post->owner->name))) }}</span>
                                 </div>
                             @endif
                         </div>
@@ -55,8 +54,7 @@
                                 <div class="avatar avatar-xs" data-bs-toggle="tooltip" data-bs-placement="top"
                                     aria-label="{{ $post->owner->name }}"
                                     data-bs-original-title="{{ $post->owner->name }}">
-                                    <img src='https://ui-avatars.com/api/?name={{ urlencode($post->owner->name) }}&size=30&background=696cff&color=FFFFFF'
-                                        class='avatar-initial rounded-circle'>
+                                    <span class="avatar-initial rounded-circle bg-primary">{{ implode('', array_map(fn($word) => strtoupper($word[0]), explode(' ', $post->owner->name))) }}</span>
                                 </div>
                             @endif
                         </div>

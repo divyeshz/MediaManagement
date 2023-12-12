@@ -46,8 +46,8 @@
                         <div class="avatar-wrapper">
                             <div class="avatar me-2">
                                 @if ($user->profile == null)
-                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&size=41&background=696cff&color=FFFFFF"
-                                        class="avatar-initial rounded-circle">
+                                    <span
+                                        class="avatar-initial rounded-circle bg-primary">{{ implode('', array_map(fn($word) => strtoupper($word[0]), explode(' ', $user->name))) }}</span>
                                 @else
                                     <img src="{{ asset('' . str_replace('/profile/', '/profile/thumbnail/', $user->profile) . '') }}"
                                         alt="Avatar" class="rounded-circle">

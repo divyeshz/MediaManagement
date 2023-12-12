@@ -31,7 +31,8 @@
                                             @if ($user->profile == '')
                                                 <option value="{{ $user->id }}"
                                                     {{ $user->posts->contains($post->id) ? 'selected' : '' }}
-                                                    data-content="<img src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&size=30&background=696cff&color=FFFFFF' class='avatar-initial rounded-circle'>&nbsp;{{ $user->name }}">
+                                                    data-content="<span
+                                                    class='avatar-initial text-white p-1 rounded-circle bg-primary'>{{ implode('', array_map(fn($word) => strtoupper($word[0]), explode(' ', $user->name))) }}</span>&nbsp;{{ $user->name }}">
                                                     {{ $user->name }}</option>
                                             @else
                                                 <option value="{{ $user->id }}"
@@ -54,8 +55,8 @@
                                         <img src="{{ asset($user->profile) }}" alt="Avatar"
                                             class="rounded-circle  pull-up">
                                     @else
-                                        <img src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&size=30&background=696cff&color=FFFFFF'
-                                            class='avatar-initial rounded-circle'>
+                                    <span
+                                        class="avatar-initial rounded-circle bg-primary">{{ implode('', array_map(fn($word) => strtoupper($word[0]), explode(' ', $user->name))) }}</span>
                                     @endif
                                 </div>
                             @endforeach
@@ -93,7 +94,8 @@
                                             @if ($user->profile == '')
                                                 <option value="{{ $user->id }}"
                                                     {{ $user->posts->contains($post->id) ? 'selected' : '' }}
-                                                    data-content="<img src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&size=30&background=696cff&color=FFFFFF' class='avatar-initial rounded-circle'>&nbsp;{{ $user->name }}">
+                                                    data-content="<span
+                                                    class='avatar-initial text-white p-1 rounded-circle bg-primary'>{{ implode('', array_map(fn($word) => strtoupper($word[0]), explode(' ', $user->name))) }}</span>&nbsp;{{ $user->name }}">
                                                     {{ $user->name }}</option>
                                             @else
                                                 <option value="{{ $user->id }}"
@@ -116,8 +118,8 @@
                                         <img src="{{ asset($user->profile) }}" alt="Avatar"
                                             class="rounded-circle  pull-up">
                                     @else
-                                        <img src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&size=30&background=696cff&color=FFFFFF'
-                                            class='avatar-initial rounded-circle'>
+                                    <span
+                                        class="avatar-initial rounded-circle bg-primary">{{ implode('', array_map(fn($word) => strtoupper($word[0]), explode(' ', $user->name))) }}</span>
                                     @endif
                                 </div>
                             @endforeach

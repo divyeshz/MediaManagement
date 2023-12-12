@@ -59,7 +59,7 @@
                         @foreach ($users as $user)
                             @if ($user->profile == '')
                                 <option value="{{ $user->id }}"
-                                    data-content="<img src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&size=30&background=696cff&color=FFFFFF' class='avatar-initial rounded-circle'>&nbsp;{{ $user->name }}">
+                                    data-content="<span class='avatar-initial text-white p-1 rounded-circle bg-primary'>{{ implode('', array_map(fn($word) => strtoupper($word[0]), explode(' ', $user->name))) }}</span>&nbsp;{{ $user->name }}">
                                     {{ $user->name }}</option>
                             @else
                                 <option value="{{ $user->id }}"
@@ -192,7 +192,8 @@
                     data: $("#commentForm").serialize(),
                     success: function(response) {
                         // Append or update the comments section within the modal
-                        $('#commentModal .modal-body').find('.comments-list').html($(response).find('.comments-list').html());
+                        $('#commentModal .modal-body').find('.comments-list').html($(response)
+                            .find('.comments-list').html());
 
                         // Clear the comment form
                         $('#commentForm textarea[name="comment_text"]').val('');

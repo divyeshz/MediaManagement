@@ -82,8 +82,8 @@
                             alt class="w-px-40 h-auto rounded-circle">
                     @else
                         @if (isset(Auth::user()->name))
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&size=41&background=696cff&color=FFFFFF"
-                                class="w-px-40 h-auto avatar-initial rounded-circle">
+                            <span
+                                class="avatar-initial rounded-circle bg-primary">{{ implode('', array_map(fn($word) => strtoupper($word[0]), explode(' ', Auth::user()->name))) }}</span>
                         @endif
                     @endif
                 </div>
@@ -100,8 +100,8 @@
                                             alt class="w-px-40 h-auto rounded-circle">
                                     @else
                                         @if (isset(Auth::user()->name))
-                                            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&size=41&background=696cff&color=FFFFFF"
-                                                class="w-px-40 h-auto avatar-initial rounded-circle">
+                                            <span
+                                                class="avatar-initial rounded-circle bg-primary">{{ implode('', array_map(fn($word) => strtoupper($word[0]), explode(' ', Auth::user()->name))) }}</span>
                                         @endif
                                     @endif
                                 </div>
