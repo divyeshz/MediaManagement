@@ -77,7 +77,7 @@ class UserController extends Controller
 
     $user = User::findOrFail($id);
 
-    $profile = null;
+    $profile = NULL;
     if ($request->hasfile('profile')) {
 
       // Remove Old Image
@@ -96,8 +96,6 @@ class UserController extends Controller
       $url = $user->profile;
       $thumbnailUrl = str_replace('/profile/', '/profile/thumbnail/', $url);
       $this->unlink($url, $thumbnailUrl);
-    } else {
-      $profile .= $request->hidden_profile;
     }
 
     // Update user details
