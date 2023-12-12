@@ -27,80 +27,64 @@
         <span class="text-muted fw-light">Home /</span> User list
     </h4>
 
-    <div class="accordion mb-4" id="collapsibleSection">
-        <!-- Payment Method -->
-        <div class="card accordion-item">
-            <h2 class="accordion-header" id="headingFilterSearch">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#collapseFilterSearch" aria-expanded="false" aria-controls="collapseFilterSearch">
-                    Filter & Search </button>
-            </h2>
-            <div id="collapseFilterSearch" class="accordion-collapse collapse" aria-labelledby="headingFilterSearch"
-                data-bs-parent="#collapsibleSection">
+    <div class="card mb-4">
+        <div class="card-body">
+            <form action="{{ route('user.list') }}" method="get">
+                <div class="row g-3 ">
+                    <div class="col-md-2">
+                        <select name="gender" id="selectpickerBasic" placeholder="Select Gender" class="selectpicker w-100"
+                            data-style="btn-default">
+                            <option value="" selected>Select Gender</option>
+                            <option {{ request()->input('gender') == 'male' ? 'selected' : '' }} value="male">
+                                Male
+                            </option>
+                            <option {{ request()->input('gender') == 'female' ? 'selected' : '' }} value="female">
+                                Female
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="status" id="selectpickerBasic" placeholder="Select Status" class="selectpicker w-100"
+                            data-style="btn-default">
+                            <option value="" selected>Select Status</option>
+                            <option {{ request()->input('status') == '1' ? 'selected' : '' }} value="1">Active
+                            </option>
+                            <option {{ request()->input('status') == '0' ? 'selected' : '' }} value="0">
+                                Inactive
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary me-1">Apply</button>
+                        <a href="{{ route('user.list') }}" type="reset" class="btn btn-label-secondary">Cancel</a>
+                    </div>
 
-                <div class="accordion-body">
-                    <form action="{{ route('user.list') }}" method="get">
-                        <div class="row g-3">
-                            <div class="col-md-5">
-                                <select name="gender" id="selectpickerBasic" placeholder="Select Gender"
-                                    class="selectpicker w-100" data-style="btn-default">
-                                    <option value="" selected>Select Gender</option>
-                                    <option {{ request()->input('gender') == 'male' ? 'selected' : '' }} value="male">
-                                        Male
-                                    </option>
-                                    <option {{ request()->input('gender') == 'female' ? 'selected' : '' }} value="female">
-                                        Female
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col-md-5">
-                                <select name="status" id="selectpickerBasic" placeholder="Select Status"
-                                    class="selectpicker w-100" data-style="btn-default">
-                                    <option value="" selected>Select Status</option>
-                                    <option {{ request()->input('status') == '1' ? 'selected' : '' }} value="1">Active
-                                    </option>
-                                    <option {{ request()->input('status') == '0' ? 'selected' : '' }} value="0">
-                                        Inactive
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <button type="submit" class="btn btn-primary me-1">Apply</button>
-                                <a href="{{ route('user.list') }}" type="reset"
-                                    class="btn btn-label-secondary">Cancel</a>
-                            </div>
+                    <div class="col-md-1 offset-md-3">
+                        <div class="dataTables_length" id="DataTables_Table_0_length">
+                            <select name="per_page" id="perPageSelect" aria-controls="DataTables_Table_0"
+                                class="form-select">
+                                <option {{ request()->input('per_page') == '10' ? 'selected' : '' }} value="10">10
+                                </option>
+                                <option {{ request()->input('per_page') == '25' ? 'selected' : '' }} value="25">25
+                                </option>
+                                <option {{ request()->input('per_page') == '50' ? 'selected' : '' }} value="50">50
+                                </option>
+                                <option {{ request()->input('per_page') == '75' ? 'selected' : '' }} value="75">75
+                                </option>
+                                <option {{ request()->input('per_page') == '100' ? 'selected' : '' }} value="100">
+                                    100
+                                </option>
+                            </select>
                         </div>
-                    </form>
-                    <hr class="my-4" />
-                    <div class="row g-3">
-                        <div class="col-md-5">
-                            <div class="dataTables_length" id="DataTables_Table_0_length">
-                                <select name="per_page" id="perPageSelect" aria-controls="DataTables_Table_0"
-                                    class="form-select">
-                                    <option {{ request()->input('per_page') == '10' ? 'selected' : '' }} value="10">10
-                                    </option>
-                                    <option {{ request()->input('per_page') == '25' ? 'selected' : '' }} value="25">25
-                                    </option>
-                                    <option {{ request()->input('per_page') == '50' ? 'selected' : '' }} value="50">50
-                                    </option>
-                                    <option {{ request()->input('per_page') == '75' ? 'selected' : '' }} value="75">75
-                                    </option>
-                                    <option {{ request()->input('per_page') == '100' ? 'selected' : '' }} value="100">
-                                        100
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="card-title-elements ms-auto">
-                                <input type="text" name='search' class="form-control" id="search"
-                                    placeholder="Search" value="{{ request()->search }}" />
-                            </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card-title-elements ms-auto">
+                            <input type="text" name='search' class="form-control" id="search" placeholder="Search"
+                                value="{{ request()->search }}" />
                         </div>
                     </div>
                 </div>
-
-            </div>
+            </form>
         </div>
     </div>
 
