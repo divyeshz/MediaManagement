@@ -2,17 +2,24 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CommentController;
 use App\Http\Controllers\pages\HomePage;
-use App\Http\Controllers\FacebookController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Googlecontroller;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\FacebookController;
 
 
 // Facebook Routes Group
 Route::controller(FacebookController::class)->group(function () {
   Route::get('auth/facebook', 'redirectToFacebook')->name('auth.facebook');
   Route::get('auth/facebook/callback', 'handleFacebookCallback');
+});
+
+// Facebook Routes Group
+Route::controller(Googlecontroller::class)->group(function () {
+  Route::get('auth/google', 'redirectToGoogle')->name('auth.google');
+  Route::get('auth/google/callback', 'handleGoogleCallback');
 });
 
 // Authentication Routes Group

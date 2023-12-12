@@ -50,8 +50,10 @@
                         <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
                         <div class="d-flex justify-content-center">
-                            <a href="{{ route('auth.facebook') }}" class="btn btn-icon btn-label-facebook me-3">
-                                <i class="tf-icons bx bxl-facebook"></i>
+                            <a href="{{ route('auth.facebook') }}" class="btn rounded-pill btn-facebook me-3"><i
+                                    class="tf-icons bx bxl-facebook me-1"></i>Facebook</a>
+                            <a href="{{ route('auth.google') }}" class="btn rounded-pill btn-google-plus">
+                                <i class="tf-icons bx bxl-google-plus me-1"></i>Google+
                             </a>
                         </div>
                     </div>
