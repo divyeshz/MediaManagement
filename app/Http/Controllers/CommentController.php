@@ -15,7 +15,7 @@ class CommentController extends Controller
    * The comments function is validates a request, retrieves a post and its comments, and returns a
    * view with the post and comments.
    */
-  public function comments(Request $request)
+  public function list(Request $request)
   {
     $request->validate([
       'id'   => 'required|string|exists:posts',
@@ -32,7 +32,7 @@ class CommentController extends Controller
    * The commentStore function is validates and stores a comment, either creating a new comment or
    * updating an existing one, and then returns a view with the post and its comments.
    */
-  public function commentStore(Request $request)
+  public function storeAndUpdate(Request $request)
   {
 
     $request->validate([
@@ -71,7 +71,7 @@ class CommentController extends Controller
   /**
    * The commentDestroy function in PHP is used to permanently delete a comment based on its ID.
    */
-  public function commentDestroy(Request $request)
+  public function destroy(Request $request)
   {
     $request->validate([
       'comment_id'        => 'required|string|exists:comments,id',

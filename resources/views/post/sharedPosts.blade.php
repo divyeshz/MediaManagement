@@ -160,7 +160,7 @@
                 let id = $(this).attr('data-id');
                 // Send AJAX request
                 $.ajax({
-                    url: "{{ route('comment.comments') }}",
+                    url: "{{ route('comment.list') }}",
                     type: 'POST',
                     data: {
                         id: id,
@@ -184,7 +184,7 @@
                 e.preventDefault();
                 // Send AJAX request
                 $.ajax({
-                    url: "{{ route('comment.commentStore') }}",
+                    url: "{{ route('comment.storeAndUpdate') }}",
                     type: 'POST',
                     data: $("#commentForm").serialize(),
                     success: function(response) {

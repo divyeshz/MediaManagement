@@ -262,7 +262,7 @@
                 let id = $(this).attr('data-id');
                 // Send AJAX request
                 $.ajax({
-                    url: "{{ route('comment.comments') }}",
+                    url: "{{ route('comment.list') }}",
                     type: 'POST',
                     data: {
                         id: id,
@@ -285,7 +285,7 @@
                 e.preventDefault();
                 // Send AJAX request
                 $.ajax({
-                    url: "{{ route('comment.commentStore') }}",
+                    url: "{{ route('comment.storeAndUpdate') }}",
                     type: 'POST',
                     data: $('#commentForm').serialize(),
                     success: function(response) {
@@ -350,7 +350,7 @@
                 }).then(function(result) {
                     if (result.value) {
                         $.ajax({
-                            url: "{{ route('comment.commentDestroy') }}",
+                            url: "{{ route('comment.destroy') }}",
                             type: 'post',
                             data: {
                                 comment_id: commentId,

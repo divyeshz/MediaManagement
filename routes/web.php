@@ -55,9 +55,9 @@ Route::group(['middleware' => ['auth']], function () {
   });
 
   Route::controller(CommentController::class)->prefix('comment')->group(function () {
-    Route::post('comments', 'comments')->name('comment.comments');
-    Route::post('commentStore', 'commentStore')->name('comment.commentStore');
-    Route::post('commentDestroy', 'commentDestroy')->name('comment.commentDestroy');
+    Route::post('list', 'list')->name('comment.list');
+    Route::post('storeAndUpdate', 'storeAndUpdate')->name('comment.storeAndUpdate');
+    Route::post('destroy', 'destroy')->name('comment.destroy');
   });
 
   // Main Page Route
