@@ -166,7 +166,8 @@
                     },
                     success: function(data) {
                         $('#postList').html(data);
-                        $('.sharedUsersIds').selectpicker('refresh');
+                        $('.sharedUsersIds').selectpicker('destroy');
+                        $('.sharedUsersIds').selectpicker();
                     }
                 })
             });
@@ -208,7 +209,8 @@
                     },
                     success: function(data) {
                         $('#postList').html(data);
-                        $('.sharedUsersIds').selectpicker('refresh');
+                        $('.sharedUsersIds').selectpicker('destroy');
+                        $('.sharedUsersIds').selectpicker();
                     }
                 });
             });
@@ -254,7 +256,7 @@
                 chnagePostType(postType);
             });
 
-            $(document).on('click', '#commentModalBtn', function() {
+            $(document).on('click', '.commentModalBtn', function() {
                 let id = $(this).attr('data-id');
                 // Send AJAX request
                 $.ajax({
@@ -397,7 +399,8 @@
                         },
                         success: function(data) {
                             $('#postList').html(data);
-                            $('.sharedUsersIds').selectpicker('refresh');
+                            $('.sharedUsersIds').selectpicker('destroy');
+                            $('.sharedUsersIds').selectpicker();
                         }
                     });
                 }

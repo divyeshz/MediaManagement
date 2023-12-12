@@ -26,6 +26,7 @@ class PostController extends Controller
 
     $users = User::whereNot('id', Auth::user()->id)->get();
     $query = Post::query();
+    $query = $query->where('created_by', auth()->id());
 
     // Apply search filters for 'name', 'email', and 'gender' columns
     if ($request->has('search')) {
