@@ -84,11 +84,6 @@
                 <div class="col-md-2">
                     <a href="{{ route('post.sharePostsList') }}" type="reset" class="btn btn-label-secondary">Cancel</a>
                 </div>
-                <div class="col-md-2 text-md-end">
-                    <a href="{{ route('post.create') }}" class="btn btn-primary">
-                        <span class="tf-icons bx bx-plus me-1"></span>Add
-                    </a>
-                </div>
             </div>
         </div>
     </div>
