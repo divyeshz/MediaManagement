@@ -159,7 +159,7 @@
                 });
             });
 
-            $(document).on('click', '#commentModalBtn', function() {
+            $(document).on('click', '.commentModalBtn', function() {
                 let id = $(this).attr('data-id');
                 // Send AJAX request
                 $.ajax({

@@ -10,7 +10,7 @@
                 <div class="modal-body">
                     <form action="" id="commentForm" method="post">
                         @csrf
-                        <h4>{!! $post->post_type == 'image' ? $post->name : $post->text !!}</h4>
+                        <h5>{!! $post->post_type == 'image' ? $post->name : $post->text !!}</h5>
 
                         @if (isset($post) && $post->post_type == 'image' && $post != null && $post->image != '')
                             <div class="mb-3 image_box">
@@ -62,7 +62,7 @@
                                                     </div>
                                                     <div class="ms-auto">
 
-                                                        @if ($comment->user_id == Auth::user()->id)
+                                                        @if ($comment->user_id == Auth::user()->id || $post->created_by == Auth::user()->id)
                                                             <button type="button" data-id="{{ $comment->id }}"
                                                                 class="btn btn-icon text-primary editComment">
                                                                 <span class="tf-icons bx bx-edit"></span>
